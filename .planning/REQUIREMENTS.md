@@ -70,10 +70,10 @@
 
 ### LaunchAgents
 
-- [ ] **LAUNCH-01**: `backup.sh` generates and installs `~/Library/LaunchAgents/com.agmind.backup.plist` from template
-- [ ] **LAUNCH-02**: `health-gen.sh` generates and installs `~/Library/LaunchAgents/com.agmind.health.plist` from template
-- [ ] **LAUNCH-03**: All LaunchAgent plists include explicit `EnvironmentVariables` dict with `PATH` containing `/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin` to avoid tool-not-found failures
-- [ ] **LAUNCH-04**: LaunchAgents loaded via `launchctl load ~/Library/LaunchAgents/com.agmind.*.plist`
+- [x] **LAUNCH-01**: `backup.sh` generates and installs `~/Library/LaunchAgents/com.agmind.backup.plist` from template
+- [x] **LAUNCH-02**: `health-gen.sh` generates and installs `~/Library/LaunchAgents/com.agmind.health.plist` from template
+- [x] **LAUNCH-03**: All LaunchAgent plists include explicit `EnvironmentVariables` dict with `PATH` containing `/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin` to avoid tool-not-found failures
+- [x] **LAUNCH-04**: LaunchAgents loaded via `launchctl load ~/Library/LaunchAgents/com.agmind.*.plist`
 
 ### CLI Tool
 
@@ -171,10 +171,10 @@
 | DEPLOY-04 | Phase 6 | Pending |
 | DEPLOY-05 | Phase 6 | Pending |
 | DEPLOY-06 | Phase 6 | Pending |
-| LAUNCH-01 | Phase 6 | Pending |
-| LAUNCH-02 | Phase 6 | Pending |
-| LAUNCH-03 | Phase 6 | Pending |
-| LAUNCH-04 | Phase 6 | Pending |
+| LAUNCH-01 | Phase 6 | Complete |
+| LAUNCH-02 | Phase 6 | Complete |
+| LAUNCH-03 | Phase 6 | Complete |
+| LAUNCH-04 | Phase 6 | Complete |
 | CLI-01 | Phase 7 | Pending |
 | CLI-02 | Phase 7 | Pending |
 | CLI-03 | Phase 7 | Pending |
