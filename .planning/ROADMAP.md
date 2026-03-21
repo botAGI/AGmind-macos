@@ -51,7 +51,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — lib/detect.sh detection functions and preflight aggregator wired into install.sh
+- [x] 02-01-PLAN.md — lib/detect.sh detection functions and preflight aggregator wired into install.sh
 - [ ] 02-02-PLAN.md — Mock executables and comprehensive BATS tests for lib/detect.sh
 
 ### Phase 3: Wizard
@@ -142,8 +142,8 @@ Note: Phase 3 (Wizard) and Phase 4 (Docker and Ollama) both depend on Phase 2 bu
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Planning complete | - |
-| 2. Detection | 0/2 | Planning complete | - |
+| 1. Foundation | 2/2 | Complete | 2026-03-21 |
+| 2. Detection | 1/2 | In Progress | - |
 | 3. Wizard | 0/1 | Not started | - |
 | 4. Docker and Ollama | 0/2 | Not started | - |
 | 5. Config Generation | 0/2 | Not started | - |
