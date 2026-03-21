@@ -110,12 +110,13 @@ Plans:
   3. Open WebUI admin account is initialized via API and the web interface is accessible at `http://localhost:3000`
   4. LaunchAgent plists for backup and health are installed in `~/Library/LaunchAgents/`, pass `plutil -lint`, include explicit PATH with `/opt/homebrew/bin`, and are loaded via `launchctl`
   5. Installer prints a final summary showing service URLs, credentials file path, and next-step instructions
-**Plans**: TBD
+**Plans:** 4 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
-- [ ] 06-03: TBD
+- [ ] 06-01-PLAN.md — Deploy modules: compose.sh, health.sh, models.sh, openwebui.sh with install.sh phase wiring
+- [ ] 06-02-PLAN.md — LaunchAgent modules: plist templates, lib/backup.sh, scripts/backup.sh, scripts/health-gen.sh
+- [ ] 06-03-PLAN.md — BATS tests for deploy modules (compose, health, models, openwebui) with mock extensions
+- [ ] 06-04-PLAN.md — BATS tests for LaunchAgent module (backup) with launchctl and plutil mocks
 
 ### Phase 7: CLI
 **Goal**: Users can manage the AGMind stack day-to-day without remembering Docker or Homebrew commands
@@ -147,5 +148,5 @@ Note: Phase 3 (Wizard) and Phase 4 (Docker and Ollama) both depend on Phase 2 bu
 | 3. Wizard | 0/1 | Not started | - |
 | 4. Docker and Ollama | 0/2 | Not started | - |
 | 5. Config Generation | 0/2 | Not started | - |
-| 6. Stack Deployment | 0/3 | Not started | - |
+| 6. Stack Deployment | 0/4 | Not started | - |
 | 7. CLI | 0/2 | Not started | - |
