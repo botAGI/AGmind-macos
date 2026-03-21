@@ -94,11 +94,11 @@ Plans:
   3. `docker-compose.yml` activates correct `COMPOSE_PROFILES` for the chosen vector DB, ETL mode, and monitoring options
   4. `nginx.conf` is rendered from template with correct upstream addresses
   5. `/opt/agmind/credentials.txt` exists with mode 600, containing all generated secrets (passwords, API keys from `/dev/urandom`)
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — Templates (versions.env, env profiles, nginx.conf, docker-compose.yml) and lib/config.sh with template rendering, secret generation, and phase function
+- [ ] 05-02-PLAN.md — Comprehensive BATS tests for CONFIG-01 through CONFIG-07 and install.sh wiring
 
 ### Phase 6: Stack Deployment
 **Goal**: The full RAG stack is running, healthy, models are pulled, and scheduled maintenance is active
