@@ -1,0 +1,54 @@
+#!/bin/bash
+# Mock launchctl for testing LaunchAgent management
+# MOCK_LAUNCHCTL_LOADED="com.agmind.backup,com.agmind.health" (comma-separated loaded agents)
+# MOCK_LAUNCHCTL_BOOTSTRAP="ok"|"fail" (default: ok)
+# MOCK_LAUNCHCTL_LOAD="ok"|"fail" (default: ok)
+_loaded="${MOCK_LAUNCHCTL_LOADED:-}"
+_bootstrap="${MOCK_LAUNCHCTL_BOOTSTRAP:-ok}"
+_load="${MOCK_LAUNCHCTL_LOAD:-ok}"
+
+case "$1" in
+  list)
+    # Check if specific label is loaded
+    if [ -n "${2:-}" ]; then
+      case ",${_loaded}," in
+        *",${2},"*)
+          echo "{ \"Label\" = \"${2}\"; }"
+          exit 0
+          ;;
+        *)
+          exit 1
+          ;;
+      esac
+    else
+      echo "mock: launchctl list"
+      exit 0
+    fi
+    ;;
+  bootstrap)
+    # launchctl bootstrap gui/<uid> <plist>
+    if [ "$_bootstrap" = "ok" ]; then
+      echo "mock: launchctl bootstrap $*"
+      exit 0
+    else
+      exit 1
+    fi
+    ;;
+  load)
+    # launchctl load <plist>
+    if [ "$_load" = "ok" ]; then
+      echo "mock: launchctl load $*"
+      exit 0
+    else
+      exit 1
+    fi
+    ;;
+  bootout|unload)
+    echo "mock: launchctl $*"
+    exit 0
+    ;;
+  *)
+    echo "mock: launchctl $*"
+    exit 0
+    ;;
+esac

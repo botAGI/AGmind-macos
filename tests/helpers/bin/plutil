@@ -1,0 +1,20 @@
+#!/bin/bash
+# Mock plutil for testing plist validation
+# MOCK_PLUTIL_LINT="ok"|"fail" (default: ok)
+_lint="${MOCK_PLUTIL_LINT:-ok}"
+
+case "$1" in
+  -lint)
+    if [ "$_lint" = "ok" ]; then
+      echo "${2:-file.plist}: OK"
+      exit 0
+    else
+      echo "${2:-file.plist}: Unexpected character at line 1"
+      exit 1
+    fi
+    ;;
+  *)
+    echo "mock: plutil $*"
+    exit 0
+    ;;
+esac
