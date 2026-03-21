@@ -22,7 +22,13 @@ set -eEuo pipefail
 
 # Generate a 32-character alphanumeric secret from /dev/urandom
 _generate_secret() {
-    LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32
+    # Read a bounded chunk from urandom, filter to alnum, take 32 chars.
+    # Uses dd to read a fixed block (48 bytes gives ~36 alnum on average),
+    # then tr filters + printf truncates. Avoids tr|head SIGPIPE (exit 141)
+    # that occurs under set -o pipefail when head closes before tr finishes.
+    local raw
+    raw=$(dd if=/dev/urandom bs=256 count=1 2>/dev/null | LC_ALL=C tr -dc 'A-Za-z0-9')
+    printf "%.32s" "$raw"
 }
 
 # =============================================================================
