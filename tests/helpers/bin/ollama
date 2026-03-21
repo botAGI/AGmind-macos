@@ -1,0 +1,35 @@
+#!/bin/bash
+# Mock ollama for testing model management
+# MOCK_OLLAMA_MODELS="qwen2.5:14b,nomic-embed-text" (comma-separated list of installed models)
+# MOCK_OLLAMA_PULL="ok"|"fail" (default: ok)
+_models="${MOCK_OLLAMA_MODELS:-}"
+_pull="${MOCK_OLLAMA_PULL:-ok}"
+
+case "$1" in
+  list)
+    echo "NAME                   ID              SIZE      MODIFIED"
+    # Output each model from the comma-separated list
+    OLD_IFS="$IFS"
+    IFS=","
+    for m in $_models; do
+      echo "${m}               abc123def456    4.1 GB    2 days ago"
+    done
+    IFS="$OLD_IFS"
+    exit 0
+    ;;
+  pull)
+    if [ "$_pull" = "fail" ]; then
+      echo "Error: pull model manifest: file does not exist" >&2
+      exit 1
+    fi
+    echo "pulling manifest..."
+    echo "pulling abc123def456..."
+    echo "verifying sha256 digest..."
+    echo "success"
+    exit 0
+    ;;
+  *)
+    echo "mock: ollama $*"
+    exit 0
+    ;;
+esac

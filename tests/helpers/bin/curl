@@ -1,7 +1,55 @@
 #!/bin/bash
-# Mock curl for testing Ollama API reachability
+# Mock curl for testing Ollama API, Open WebUI accessibility, and signup API
 # MOCK_OLLAMA_API="ok"|"fail" (default: ok)
+# MOCK_OPENWEBUI_API="ok"|"fail" (default: ok)
+# MOCK_OPENWEBUI_SIGNUP="ok"|"exists"|"fail" (default: ok)
 _api="${MOCK_OLLAMA_API:-ok}"
+_webui="${MOCK_OPENWEBUI_API:-ok}"
+_signup="${MOCK_OPENWEBUI_SIGNUP:-ok}"
+
+# Check for Open WebUI accessibility calls (port 80, localhost)
+for arg in "$@"; do
+  case "$arg" in
+    http://localhost/*)
+      if [ "$_webui" = "ok" ]; then
+        echo '{"status":"ok"}'
+        exit 0
+      else
+        exit 1
+      fi
+      ;;
+    http://localhost/)
+      if [ "$_webui" = "ok" ]; then
+        echo '{"status":"ok"}'
+        exit 0
+      else
+        exit 1
+      fi
+      ;;
+  esac
+done
+
+# Check for Open WebUI signup API calls (port 3000)
+for arg in "$@"; do
+  case "$arg" in
+    http://localhost:3000/api/v1/auths/signup*)
+      case "$_signup" in
+        ok)
+          echo '{"id":"admin-id","email":"admin@agmind.local","name":"AGMind Admin"}'
+          exit 0
+          ;;
+        exists)
+          echo '{"detail":"Email is already registered"}' >&2
+          exit 1
+          ;;
+        fail)
+          exit 1
+          ;;
+      esac
+      ;;
+  esac
+done
+
 # Check if this is an Ollama API call
 for arg in "$@"; do
   case "$arg" in

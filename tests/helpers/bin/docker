@@ -1,7 +1,13 @@
 #!/bin/bash
-# Mock docker for testing socket connectivity and compose version
+# Mock docker for testing socket connectivity, compose version, compose ps/up, and inspect
 # MOCK_DOCKER_SOCKET="desktop"|"colima"|"both"|"none" (default: none)
 # MOCK_COMPOSE_VERSION="Docker Compose version v2.32.4"|"none" (default: v2.32.4)
+# MOCK_COMPOSE_RUNNING_COUNT=N (number of running containers for compose ps --status running -q)
+# MOCK_COMPOSE_EXITED_COUNT=N (number of exited containers for compose ps --status exited -q)
+# MOCK_COMPOSE_CONTAINER_ID="id" (container ID for compose ps -q <service>)
+# MOCK_COMPOSE_SERVICES="api db_postgres redis" (space-separated service names for compose ps --services)
+# MOCK_CONTAINER_HEALTH_STATUS="healthy"|"unhealthy"|"starting"|"" (for docker inspect Health.Status)
+# MOCK_CONTAINER_STATE_STATUS="running"|"exited"|"" (for docker inspect State.Status)
 _socket="${MOCK_DOCKER_SOCKET:-none}"
 _compose_ver="${MOCK_COMPOSE_VERSION:-Docker Compose version v2.32.4}"
 case "$1" in
@@ -30,7 +36,70 @@ case "$1" in
       echo "$_compose_ver"
       exit 0
     fi
+    # compose ps with various flags
+    if [ "${2:-}" = "ps" ]; then
+      case "${3:-}" in
+        --status)
+          # MOCK_COMPOSE_RUNNING_COUNT controls how many "running" containers
+          if [ "${4:-}" = "running" ] && [ "${5:-}" = "-q" ]; then
+            _running="${MOCK_COMPOSE_RUNNING_COUNT:-0}"
+            _i=0
+            while [ "$_i" -lt "$_running" ]; do
+              echo "container_${_i}"
+              _i=$((_i + 1))
+            done
+          elif [ "${4:-}" = "exited" ] && [ "${5:-}" = "-q" ]; then
+            _exited="${MOCK_COMPOSE_EXITED_COUNT:-0}"
+            _i=0
+            while [ "$_i" -lt "$_exited" ]; do
+              echo "exited_${_i}"
+              _i=$((_i + 1))
+            done
+          fi
+          exit 0
+          ;;
+        -q)
+          # Return container ID for a specific service
+          echo "${MOCK_COMPOSE_CONTAINER_ID:-mock_container_abc123}"
+          exit 0
+          ;;
+        --services)
+          # Return service names
+          _services="${MOCK_COMPOSE_SERVICES:-api db_postgres redis}"
+          for svc in $_services; do echo "$svc"; done
+          exit 0
+          ;;
+        *)
+          echo "mock: docker compose ps $*"
+          exit 0
+          ;;
+      esac
+    fi
+    # compose up
+    if [ "${2:-}" = "up" ]; then
+      echo "mock: docker compose up ${3:-}"
+      exit 0
+    fi
     echo "mock: docker compose $*"
+    exit 0
+    ;;
+  inspect)
+    # MOCK_CONTAINER_HEALTH_STATUS and MOCK_CONTAINER_STATE_STATUS
+    _health="${MOCK_CONTAINER_HEALTH_STATUS:-healthy}"
+    _state="${MOCK_CONTAINER_STATE_STATUS:-running}"
+    for arg in "$@"; do
+      case "$arg" in
+        *Health.Status*)
+          echo "$_health"
+          exit 0
+          ;;
+        *State.Status*)
+          echo "$_state"
+          exit 0
+          ;;
+      esac
+    done
+    echo "mock: docker inspect $*"
     exit 0
     ;;
   *)
