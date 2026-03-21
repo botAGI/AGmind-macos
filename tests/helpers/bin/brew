@@ -1,7 +1,7 @@
 #!/bin/bash
 # Mock brew for testing -- supports install, list --formula, services, --prefix
 # MOCK_BREW_INSTALLED="colima,docker,docker-compose,ollama" (comma-separated installed formulae)
-_installed="${MOCK_BREW_INSTALLED:-colima,docker,docker-compose,ollama}"
+_installed="${MOCK_BREW_INSTALLED-colima,docker,docker-compose,ollama}"
 case "$1" in
   --prefix)
     echo "/opt/homebrew"
