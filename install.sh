@@ -17,6 +17,9 @@ source "${SCRIPT_DIR}/lib/common.sh"
 # Source detection module
 source "${SCRIPT_DIR}/lib/detect.sh"
 
+# Source wizard module
+source "${SCRIPT_DIR}/lib/wizard.sh"
+
 # =============================================================================
 # Defaults for optional variables (must be set before arg parsing due to set -u)
 # =============================================================================
@@ -138,6 +141,10 @@ run_phase() {
 
 phase_1_diagnostics() {
     preflight_checks
+}
+
+phase_2_wizard() {
+    run_wizard
 }
 
 # =============================================================================
