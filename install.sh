@@ -26,6 +26,9 @@ source "${SCRIPT_DIR}/lib/docker.sh"
 # Source ollama module
 source "${SCRIPT_DIR}/lib/ollama.sh"
 
+# Source config module
+source "${SCRIPT_DIR}/lib/config.sh"
+
 # =============================================================================
 # Defaults for optional variables (must be set before arg parsing due to set -u)
 # =============================================================================
