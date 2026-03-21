@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-03-21T19:53:17.291Z"
-last_activity: 2026-03-21 -- Completed Plan 04-02 (Ollama management and install.sh wiring)
+status: completed
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-21T21:13:08.962Z"
+last_activity: 2026-03-21 -- Completed Plan 05-01 (Config generation templates and lib/config.sh)
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 7
-  completed_plans: 7
-  percent: 100
+  total_plans: 9
+  completed_plans: 8
+  percent: 89
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** One `bash install.sh` command deploys a full local AI RAG stack on macOS with native Metal-accelerated Ollama inference
-**Current focus:** Phase 4: Docker and Ollama
+**Current focus:** Phase 5: Config Generation
 
 ## Current Position
 
-Phase: 4 of 7 (Docker and Ollama) -- COMPLETE
-Plan: 2 of 2 in current phase
-Status: Phase Complete
-Last activity: 2026-03-21 -- Completed Plan 04-02 (Ollama management and install.sh wiring)
+Phase: 5 of 7 (Config Generation) -- IN PROGRESS
+Plan: 1 of 2 in current phase
+Status: Plan 05-01 complete, Plan 05-02 next
+Last activity: 2026-03-21 -- Completed Plan 05-01 (Config generation templates and lib/config.sh)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 89%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [██████████] 100%
 | Phase 03 P01 | 7min | 2 tasks | 3 files |
 | Phase 04 P01 | 4min | 2 tasks | 5 files |
 | Phase 04 P02 | 3min | 2 tasks | 3 files |
+| Phase 05 P01 | 4min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,9 @@ Recent decisions affecting current work:
 - [Phase 04]: setup_compose_plugin uses python3 -c for safe JSON merge (python3 ships with macOS)
 - [Phase 04]: Brew mock uses ${VAR-default} (no colon) to distinguish empty string from unset for MOCK_BREW_INSTALLED
 - [Phase 04]: brew services restart (not start) for robustness -- handles crashed plist case
+- [Phase 05]: Pipe delimiter (|) for all _atomic_sed calls to avoid URL slash conflicts
+- [Phase 05]: etl-extended as Compose profile name (distinct from Dify ETL_TYPE=unstructured)
+- [Phase 05]: {{DOCKER_SOCKET_PATH}} is the only sed placeholder in docker-compose.yml; rest uses native ${VAR} interpolation
 
 ### Pending Todos
 
@@ -97,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T19:53:17.289Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-03-21T21:13:08.960Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None

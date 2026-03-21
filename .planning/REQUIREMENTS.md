@@ -51,13 +51,13 @@
 
 ### Configuration
 
-- [ ] **CONFIG-01**: `config.sh` generates `/opt/agmind/.env` from `env.lan.template` or `env.offline.template` based on `DEPLOY_PROFILE`
-- [ ] **CONFIG-02**: Generated `.env` sets `OLLAMA_API_BASE=http://host.docker.internal:11434` and `OLLAMA_HOST=http://host.docker.internal:11434`
-- [ ] **CONFIG-03**: `config.sh` generates `nginx.conf` from `nginx.conf.template`
-- [ ] **CONFIG-04**: `config.sh` generates final `docker-compose.yml` with correct `COMPOSE_PROFILES` for chosen vector DB, ETL mode, and monitoring
-- [ ] **CONFIG-05**: All services in `docker-compose.yml` that call `host.docker.internal` include `extra_hosts: - "host.docker.internal:host-gateway"` for Colima compatibility
-- [ ] **CONFIG-06**: All secrets (passwords, API keys) generated via `/dev/urandom` and written to `/opt/agmind/credentials.txt` (chmod 600)
-- [ ] **CONFIG-07**: `docker-compose.yml` excludes ollama, vllm, tei, and authelia services entirely
+- [x] **CONFIG-01**: `config.sh` generates `/opt/agmind/.env` from `env.lan.template` or `env.offline.template` based on `DEPLOY_PROFILE`
+- [x] **CONFIG-02**: Generated `.env` sets `OLLAMA_API_BASE=http://host.docker.internal:11434` and `OLLAMA_HOST=http://host.docker.internal:11434`
+- [x] **CONFIG-03**: `config.sh` generates `nginx.conf` from `nginx.conf.template`
+- [x] **CONFIG-04**: `config.sh` generates final `docker-compose.yml` with correct `COMPOSE_PROFILES` for chosen vector DB, ETL mode, and monitoring
+- [x] **CONFIG-05**: All services in `docker-compose.yml` that call `host.docker.internal` include `extra_hosts: - "host.docker.internal:host-gateway"` for Colima compatibility
+- [x] **CONFIG-06**: All secrets (passwords, API keys) generated via `/dev/urandom` and written to `/opt/agmind/credentials.txt` (chmod 600)
+- [x] **CONFIG-07**: `docker-compose.yml` excludes ollama, vllm, tei, and authelia services entirely
 
 ### Stack Deployment
 
@@ -158,13 +158,13 @@
 | OLLAMA-02 | Phase 4 | Complete |
 | OLLAMA-03 | Phase 4 | Complete |
 | OLLAMA-04 | Phase 4 | Complete |
-| CONFIG-01 | Phase 5 | Pending |
-| CONFIG-02 | Phase 5 | Pending |
-| CONFIG-03 | Phase 5 | Pending |
-| CONFIG-04 | Phase 5 | Pending |
-| CONFIG-05 | Phase 5 | Pending |
-| CONFIG-06 | Phase 5 | Pending |
-| CONFIG-07 | Phase 5 | Pending |
+| CONFIG-01 | Phase 5 | Complete |
+| CONFIG-02 | Phase 5 | Complete |
+| CONFIG-03 | Phase 5 | Complete |
+| CONFIG-04 | Phase 5 | Complete |
+| CONFIG-05 | Phase 5 | Complete |
+| CONFIG-06 | Phase 5 | Complete |
+| CONFIG-07 | Phase 5 | Complete |
 | DEPLOY-01 | Phase 6 | Pending |
 | DEPLOY-02 | Phase 6 | Pending |
 | DEPLOY-03 | Phase 6 | Pending |
