@@ -63,10 +63,10 @@ Plans:
   2. LLM model menu shows a RAM-aware recommendation (e.g., "Recommended for your 32GB system: qwen2.5:14b") derived from `DETECTED_RAM_GB`
   3. Setting `NON_INTERACTIVE=1` with env vars (`DEPLOY_PROFILE`, `LLM_MODEL`, `EMBED_MODEL`, `VECTOR_DB`, etc.) skips all prompts and produces identical `WIZARD_*` exports
   4. All wizard choices are exported as `WIZARD_*` variables consumable by config.sh
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 03-01: TBD
+- [ ] 03-01-PLAN.md — lib/wizard.sh interactive wizard, model menu, non-interactive mode, WIZARD_* exports, and BATS tests
 
 ### Phase 4: Docker and Ollama
 **Goal**: A working Docker runtime and a native Ollama instance are both running and ready to accept commands
