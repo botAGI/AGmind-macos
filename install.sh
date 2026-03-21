@@ -14,11 +14,15 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Source common utilities
 source "${SCRIPT_DIR}/lib/common.sh"
 
+# Source detection module
+source "${SCRIPT_DIR}/lib/detect.sh"
+
 # =============================================================================
 # Defaults for optional variables (must be set before arg parsing due to set -u)
 # =============================================================================
 
 NON_INTERACTIVE="${NON_INTERACTIVE:-0}"
+SKIP_PREFLIGHT="${SKIP_PREFLIGHT:-0}"
 
 # =============================================================================
 # Usage / Help
@@ -126,6 +130,14 @@ run_phase() {
         log_warn "[SKIP] Phase ${num}: ${name} -- not yet implemented"
         PHASES_SKIPPED=$((PHASES_SKIPPED + 1))
     fi
+}
+
+# =============================================================================
+# Phase Functions
+# =============================================================================
+
+phase_1_diagnostics() {
+    preflight_checks
 }
 
 # =============================================================================
