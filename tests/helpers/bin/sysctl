@@ -1,10 +1,12 @@
 #!/bin/bash
-# Mock sysctl for testing -- returns 32GB RAM by default
+# Mock sysctl for testing -- returns RAM in bytes
+# Override: MOCK_RAM_BYTES (default: 34359738368 = 32GB)
+_bytes="${MOCK_RAM_BYTES:-34359738368}"
 case "$1" in
-  hw.memsize)   echo "hw.memsize: 34359738368" ;;  # 32 GB
+  hw.memsize)   echo "hw.memsize: ${_bytes}" ;;
   -n)
     case "$2" in
-      hw.memsize) echo "34359738368" ;;
+      hw.memsize) echo "${_bytes}" ;;
       *)          echo "0" ;;
     esac
     ;;

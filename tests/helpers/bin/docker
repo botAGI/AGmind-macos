@@ -1,0 +1,27 @@
+#!/bin/bash
+# Mock docker for testing socket connectivity
+# MOCK_DOCKER_SOCKET="desktop"|"colima"|"both"|"none" (default: none)
+_socket="${MOCK_DOCKER_SOCKET:-none}"
+case "$1" in
+  info)
+    if [ "$_socket" = "none" ]; then
+      exit 1
+    fi
+    case "${DOCKER_HOST:-}" in
+      *colima*)
+        [ "$_socket" = "colima" ] || [ "$_socket" = "both" ] && exit 0 || exit 1
+        ;;
+      *docker/run*|*docker.sock*)
+        [ "$_socket" = "desktop" ] || [ "$_socket" = "both" ] && exit 0 || exit 1
+        ;;
+      *)
+        # No DOCKER_HOST set -- if any socket available, succeed
+        [ "$_socket" != "none" ] && exit 0 || exit 1
+        ;;
+    esac
+    ;;
+  *)
+    echo "mock: docker $*"
+    exit 0
+    ;;
+esac

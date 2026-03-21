@@ -1,0 +1,20 @@
+#!/bin/bash
+# Mock curl for testing Ollama API reachability
+# MOCK_OLLAMA_API="ok"|"fail" (default: ok)
+_api="${MOCK_OLLAMA_API:-ok}"
+# Check if this is an Ollama API call
+for arg in "$@"; do
+  case "$arg" in
+    *11434*|*ollama*)
+      if [ "$_api" = "ok" ]; then
+        echo '{"models":[]}'
+        exit 0
+      else
+        exit 1
+      fi
+      ;;
+  esac
+done
+# Default: succeed for other URLs
+echo "mock: curl $*"
+exit 0

@@ -1,0 +1,32 @@
+#!/bin/bash
+# Mock lsof for testing port detection
+# MOCK_PORTS_IN_USE="80:nginx:1234,3000:node:5678"
+_port=""
+for arg in "$@"; do
+  case "$arg" in
+    -iTCP:*) _port="${arg#-iTCP:}" ;;
+  esac
+done
+
+if [ -z "$_port" ] || [ -z "${MOCK_PORTS_IN_USE:-}" ]; then
+  exit 1
+fi
+
+# Use a temp approach to avoid subshell exit issue
+_found=1
+_old_ifs="$IFS"
+IFS=","
+for _entry in $MOCK_PORTS_IN_USE; do
+  _eport="${_entry%%:*}"
+  _rest="${_entry#*:}"
+  _ename="${_rest%%:*}"
+  _epid="${_rest#*:}"
+  if [ "$_eport" = "$_port" ]; then
+    echo "COMMAND     PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME"
+    echo "${_ename}     ${_epid} user   4u  IPv4 0x0    0t0  TCP *:${_port} (LISTEN)"
+    _found=0
+    break
+  fi
+done
+IFS="$_old_ifs"
+exit $_found

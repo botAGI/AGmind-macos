@@ -1,0 +1,11 @@
+#!/bin/bash
+# Mock uname for testing architecture detection
+# MOCK_ARCH="arm64"|"x86_64" (default: arm64)
+_arch="${MOCK_ARCH:-arm64}"
+case "$1" in
+  -m) echo "$_arch" ;;
+  -s) echo "Darwin" ;;
+  -r) echo "24.0.0" ;;
+  *)  echo "Darwin" ;;
+esac
+exit 0

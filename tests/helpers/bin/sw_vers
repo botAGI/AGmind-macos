@@ -1,0 +1,14 @@
+#!/bin/bash
+# Mock sw_vers for testing
+# Override: MOCK_OS_VERSION (default: "14.2")
+_ver="${MOCK_OS_VERSION:-14.2}"
+case "$1" in
+  -productVersion|--productVersion) echo "$_ver" ;;
+  -productName|--productName)       echo "macOS" ;;
+  *)
+    printf "ProductName:\t\tmacOS\n"
+    printf "ProductVersion:\t\t%s\n" "$_ver"
+    printf "BuildVersion:\t\t23C64\n"
+    ;;
+esac
+exit 0

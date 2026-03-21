@@ -1,0 +1,15 @@
+#!/bin/bash
+# Mock df for testing disk detection
+# MOCK_DISK_AVAIL_KB=356279404 (default ~339GB)
+_avail="${MOCK_DISK_AVAIL_KB:-356279404}"
+case "$1" in
+  -k)
+    echo "Filesystem   512-blocks      Used Available Capacity iused      ifree %iused  Mounted on"
+    echo "/dev/disk3s3s1   482797652  15468436 ${_avail}  5%  453127 3562794040  0%  /"
+    ;;
+  *)
+    echo "Filesystem   512-blocks      Used Available Capacity  Mounted on"
+    echo "/dev/disk3s3s1   482797652  15468436 ${_avail}  5%  /"
+    ;;
+esac
+exit 0
