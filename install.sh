@@ -29,6 +29,15 @@ source "${SCRIPT_DIR}/lib/ollama.sh"
 # Source config module
 source "${SCRIPT_DIR}/lib/config.sh"
 
+# Source deployment modules
+source "${SCRIPT_DIR}/lib/compose.sh"
+source "${SCRIPT_DIR}/lib/health.sh"
+source "${SCRIPT_DIR}/lib/models.sh"
+source "${SCRIPT_DIR}/lib/openwebui.sh"
+
+# Source backup/LaunchAgent module
+source "${SCRIPT_DIR}/lib/backup.sh"
+
 # =============================================================================
 # Defaults for optional variables (must be set before arg parsing due to set -u)
 # =============================================================================
@@ -175,6 +184,58 @@ phase_4_ollama() {
     log_info "Ollama setup complete"
 }
 
+# phase_6_start, phase_7_health, phase_8_models are defined in their
+# respective lib modules (compose.sh, health.sh, models.sh).
+
+phase_9_complete() {
+    # Install LaunchAgents for scheduled backup and health checks
+    _install_launch_agents
+
+    # Verify Open WebUI is accessible (includes POST signup fallback)
+    _verify_openwebui_admin
+
+    # Determine LaunchAgent status for summary
+    local backup_agent_status="not loaded"
+    local health_agent_status="not loaded"
+    if launchctl list com.agmind.backup >/dev/null 2>&1; then
+        backup_agent_status="loaded"
+    fi
+    if launchctl list com.agmind.health >/dev/null 2>&1; then
+        health_agent_status="loaded"
+    fi
+
+    # Print final summary
+    local ip_addr
+    ip_addr=$(ipconfig getifaddr en0 2>/dev/null || echo "localhost")
+
+    printf "\n"
+    printf "%s\n" "${_CYAN}${_BOLD}═══════════════════════════════════════════${_NC}"
+    printf "%s\n" "${_CYAN}${_BOLD}  AGMind Installation Complete${_NC}"
+    printf "%s\n" "${_CYAN}${_BOLD}═══════════════════════════════════════════${_NC}"
+    printf "\n"
+    printf "%s\n" "${_GREEN}Service URLs:${_NC}"
+    printf "  %-20s %s\n" "Open WebUI:" "http://${ip_addr}/"
+    printf "  %-20s %s\n" "Dify Console:" "http://${ip_addr}/apps/"
+    printf "  %-20s %s\n" "Ollama API:" "http://localhost:11434"
+    printf "\n"
+    printf "%s\n" "${_GREEN}Credentials:${_NC}"
+    printf "  %-20s %s\n" "File:" "${AGMIND_DIR}/credentials.txt"
+    printf "  %-20s %s\n" "Admin Email:" "admin@agmind.local"
+    printf "  %-20s %s\n" "Admin Password:" "(see credentials.txt)"
+    printf "\n"
+    printf "%s\n" "${_GREEN}LaunchAgent Status:${_NC}"
+    printf "  %-20s %s\n" "Backup (daily 3AM):" "${backup_agent_status}"
+    printf "  %-20s %s\n" "Health (every 60s):" "${health_agent_status}"
+    printf "\n"
+    printf "%s\n" "${_GREEN}CLI Commands:${_NC}"
+    printf "  %-20s %s\n" "agmind status" "Show all service status"
+    printf "  %-20s %s\n" "agmind doctor" "Run health checks"
+    printf "  %-20s %s\n" "agmind stop" "Stop all services"
+    printf "  %-20s %s\n" "agmind start" "Start all services"
+    printf "\n"
+    log_info "Installation complete"
+}
+
 # =============================================================================
 # Execute All 9 Phases
 # =============================================================================
@@ -196,8 +257,6 @@ run_phase 9 "Complete"       "phase_9_complete"
 INSTALL_END=$(date +%s)
 ELAPSED=$((INSTALL_END - INSTALL_START))
 
-printf "\n%s\n" "${_CYAN}${_BOLD}═══ Installation Summary ═══${_NC}"
-log_info "Phases run: ${PHASES_RAN}"
-log_info "Phases skipped: ${PHASES_SKIPPED}"
-log_info "Total time: ${ELAPSED}s"
+printf "\n"
+log_info "Phases run: ${PHASES_RAN}, skipped: ${PHASES_SKIPPED}, total time: ${ELAPSED}s"
 log_info "Log file: ${LOG_FILE}"
