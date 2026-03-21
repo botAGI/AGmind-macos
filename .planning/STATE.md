@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-21T17:55:15.110Z"
-last_activity: 2026-03-21 -- Completed Plan 02-02 (Detection tests with mock executables)
+status: in-progress
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-21T19:02:00.000Z"
+last_activity: 2026-03-21 -- Completed Plan 03-01 (Wizard interactive config)
 progress:
   total_phases: 7
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** One `bash install.sh` command deploys a full local AI RAG stack on macOS with native Metal-accelerated Ollama inference
-**Current focus:** Phase 2: Detection
+**Current focus:** Phase 3: Wizard
 
 ## Current Position
 
-Phase: 2 of 7 (Detection)
-Plan: 2 of 2 in current phase
+Phase: 3 of 7 (Wizard)
+Plan: 1 of 1 in current phase
 Status: Phase Complete
-Last activity: 2026-03-21 -- Completed Plan 02-02 (Detection tests with mock executables)
+Last activity: 2026-03-21 -- Completed Plan 03-01 (Wizard interactive config)
 
 Progress: [██████████] 100%
 
@@ -54,6 +54,7 @@ Progress: [██████████] 100%
 | Phase 01 P02 | 6min | 2 tasks | 7 files |
 | Phase 02 P01 | 3min | 2 tasks | 2 files |
 | Phase 02 P02 | 3min | 2 tasks | 8 files |
+| Phase 03 P01 | 7min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - [Phase 02]: ENV override pattern for DOCKER_RUNTIME and SKIP_PREFLIGHT allows testing and advanced user control
 - [Phase 02]: lsof mock uses IFS comma-splitting instead of pipe-to-while-read to avoid subshell exit propagation bug
 - [Phase 02]: Docker socket tests use DOCKER_RUNTIME env override rather than creating real Unix sockets in BATS tmpdir
+- [Phase 03]: Menu prompts output to stderr, return values to stdout for clean $() capture
+- [Phase 03]: Pipe delimiter for model data arrays avoids conflict with Ollama model tag colons
+- [Phase 03]: Any string accepted for LLM_MODEL in non-interactive mode (custom model tags allowed)
 
 ### Pending Todos
 
@@ -87,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T17:55:15.108Z
-Stopped at: Completed 02-02-PLAN.md
-Resume file: None
+Last session: 2026-03-21T19:02:00.000Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-wizard/03-01-SUMMARY.md

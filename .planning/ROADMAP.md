@@ -12,9 +12,9 @@ The AGMind macOS Installer is a 7-phase project that delivers a one-command bash
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - BSD-safe common library, install.sh orchestrator skeleton, BATS test infrastructure
-- [ ] **Phase 2: Detection** - System detection and preflight validation for macOS hardware and software
-- [ ] **Phase 3: Wizard** - Interactive and non-interactive configuration with RAM-aware model recommendations
+- [x] **Phase 1: Foundation** - BSD-safe common library, install.sh orchestrator skeleton, BATS test infrastructure
+- [x] **Phase 2: Detection** - System detection and preflight validation for macOS hardware and software
+- [x] **Phase 3: Wizard** - Interactive and non-interactive configuration with RAM-aware model recommendations
 - [ ] **Phase 4: Docker and Ollama** - Docker runtime setup (Colima or Desktop) and native Ollama installation
 - [ ] **Phase 5: Config Generation** - Template rendering and config file generation from all upstream variables
 - [ ] **Phase 6: Stack Deployment** - Container orchestration, health verification, model pull, LaunchAgent scheduling
@@ -66,7 +66,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 03-01-PLAN.md — lib/wizard.sh interactive wizard, model menu, non-interactive mode, WIZARD_* exports, and BATS tests
+- [x] 03-01-PLAN.md — lib/wizard.sh interactive wizard, model menu, non-interactive mode, WIZARD_* exports, and BATS tests
 
 ### Phase 4: Docker and Ollama
 **Goal**: A working Docker runtime and a native Ollama instance are both running and ready to accept commands
