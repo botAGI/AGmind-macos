@@ -35,12 +35,12 @@
 
 ### Docker Setup
 
-- [ ] **DOCKER-01**: `detect_docker_runtime()` auto-detects Docker Desktop or Colima by testing socket connectivity with `docker info`
-- [ ] **DOCKER-02**: `install_colima()` installs Colima and docker CLI via `brew install colima docker` if no Docker runtime found
-- [ ] **DOCKER-03**: `start_colima()` starts Colima with `--arch aarch64` (Apple Silicon) or `--arch x86_64` (Intel), 8 CPU, 12GB RAM, 60GB disk defaults
-- [ ] **DOCKER-04**: `fix_docker_socket()` creates symlink `/var/run/docker.sock -> active socket path` when default path unavailable
-- [ ] **DOCKER-05**: `verify_compose()` confirms `docker compose version` returns v2; aborts with remediation hint if not
-- [ ] **DOCKER-06**: `DOCKER_RUNTIME` env var overrides auto-detection (`colima` or `desktop`)
+- [x] **DOCKER-01**: `detect_docker_runtime()` auto-detects Docker Desktop or Colima by testing socket connectivity with `docker info`
+- [x] **DOCKER-02**: `install_colima()` installs Colima and docker CLI via `brew install colima docker` if no Docker runtime found
+- [x] **DOCKER-03**: `start_colima()` starts Colima with `--arch aarch64` (Apple Silicon) or `--arch x86_64` (Intel), 8 CPU, 12GB RAM, 60GB disk defaults
+- [x] **DOCKER-04**: `fix_docker_socket()` creates symlink `/var/run/docker.sock -> active socket path` when default path unavailable
+- [x] **DOCKER-05**: `verify_compose()` confirms `docker compose version` returns v2; aborts with remediation hint if not
+- [x] **DOCKER-06**: `DOCKER_RUNTIME` env var overrides auto-detection (`colima` or `desktop`)
 
 ### Ollama Setup
 
@@ -148,12 +148,12 @@
 | WIZ-02 | Phase 3 | Complete |
 | WIZ-03 | Phase 3 | Complete |
 | WIZ-04 | Phase 3 | Complete |
-| DOCKER-01 | Phase 4 | Pending |
-| DOCKER-02 | Phase 4 | Pending |
-| DOCKER-03 | Phase 4 | Pending |
-| DOCKER-04 | Phase 4 | Pending |
-| DOCKER-05 | Phase 4 | Pending |
-| DOCKER-06 | Phase 4 | Pending |
+| DOCKER-01 | Phase 4 | Complete |
+| DOCKER-02 | Phase 4 | Complete |
+| DOCKER-03 | Phase 4 | Complete |
+| DOCKER-04 | Phase 4 | Complete |
+| DOCKER-05 | Phase 4 | Complete |
+| DOCKER-06 | Phase 4 | Complete |
 | OLLAMA-01 | Phase 4 | Pending |
 | OLLAMA-02 | Phase 4 | Pending |
 | OLLAMA-03 | Phase 4 | Pending |
