@@ -29,7 +29,14 @@ _pull_model_if_needed() {
     fi
 
     log_info "Pulling model: ${model} (this may take a while)..."
-    ollama pull "$model" 2>&1 | tee -a "$LOG_FILE"
+    # Capture pull output and exit code explicitly to avoid pipefail/subshell issues
+    local pull_output
+    local pull_rc=0
+    pull_output=$(ollama pull "$model" 2>&1) || pull_rc=$?
+    printf "%s\n" "$pull_output" | tee -a "$LOG_FILE"
+    if [ "$pull_rc" -ne 0 ]; then
+        die "Failed to pull model: ${model}" "Check: ollama pull ${model}"
+    fi
     log_info "Model ${model} pulled successfully"
 }
 
