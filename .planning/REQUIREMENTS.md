@@ -61,12 +61,12 @@
 
 ### Stack Deployment
 
-- [ ] **DEPLOY-01**: `compose.sh` runs `docker compose up -d` with correct profile flags for chosen services
-- [ ] **DEPLOY-02**: `health.sh` waits for all containers to pass health checks before proceeding (polling loop, no `timeout`)
-- [ ] **DEPLOY-03**: `health.sh` independently verifies Ollama API at `http://localhost:11434/api/tags`
-- [ ] **DEPLOY-04**: `models.sh` runs `ollama pull <LLM_MODEL>` and `ollama pull <EMBED_MODEL>` on the host with progress output
-- [ ] **DEPLOY-05**: `openwebui.sh` performs Open WebUI admin user initialization via API after stack is healthy
-- [ ] **DEPLOY-06**: Installer prints final summary with URLs, credentials path, and next-step instructions
+- [x] **DEPLOY-01**: `compose.sh` runs `docker compose up -d` with correct profile flags for chosen services
+- [x] **DEPLOY-02**: `health.sh` waits for all containers to pass health checks before proceeding (polling loop, no `timeout`)
+- [x] **DEPLOY-03**: `health.sh` independently verifies Ollama API at `http://localhost:11434/api/tags`
+- [x] **DEPLOY-04**: `models.sh` runs `ollama pull <LLM_MODEL>` and `ollama pull <EMBED_MODEL>` on the host with progress output
+- [x] **DEPLOY-05**: `openwebui.sh` performs Open WebUI admin user initialization via API after stack is healthy
+- [x] **DEPLOY-06**: Installer prints final summary with URLs, credentials path, and next-step instructions
 
 ### LaunchAgents
 
@@ -165,12 +165,12 @@
 | CONFIG-05 | Phase 5 | Complete |
 | CONFIG-06 | Phase 5 | Complete |
 | CONFIG-07 | Phase 5 | Complete |
-| DEPLOY-01 | Phase 6 | Pending |
-| DEPLOY-02 | Phase 6 | Pending |
-| DEPLOY-03 | Phase 6 | Pending |
-| DEPLOY-04 | Phase 6 | Pending |
-| DEPLOY-05 | Phase 6 | Pending |
-| DEPLOY-06 | Phase 6 | Pending |
+| DEPLOY-01 | Phase 6 | Complete |
+| DEPLOY-02 | Phase 6 | Complete |
+| DEPLOY-03 | Phase 6 | Complete |
+| DEPLOY-04 | Phase 6 | Complete |
+| DEPLOY-05 | Phase 6 | Complete |
+| DEPLOY-06 | Phase 6 | Complete |
 | LAUNCH-01 | Phase 6 | Complete |
 | LAUNCH-02 | Phase 6 | Complete |
 | LAUNCH-03 | Phase 6 | Complete |
