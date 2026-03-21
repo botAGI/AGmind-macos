@@ -1,11 +1,52 @@
 #!/bin/bash
-# Mock brew for testing -- returns success for common operations
+# Mock brew for testing -- supports install, list --formula, services, --prefix
+# MOCK_BREW_INSTALLED="colima,docker,docker-compose,ollama" (comma-separated installed formulae)
+_installed="${MOCK_BREW_INSTALLED:-colima,docker,docker-compose,ollama}"
 case "$1" in
-  --prefix)  echo "/opt/homebrew" ;;
-  install)   echo "mock: brew install $*" ;;
-  services)  echo "mock: brew services $*" ;;
-  info)      echo "mock: brew info $*" ;;
-  tap)       echo "mock: brew tap $*" ;;
-  *)         echo "mock: brew $*" ;;
+  --prefix)
+    echo "/opt/homebrew"
+    ;;
+  list)
+    if [ "${2:-}" = "--formula" ] && [ -n "${3:-}" ]; then
+      # Check if package is in the installed list
+      case ",${_installed}," in
+        *",${3},"*)
+          echo "${3}"
+          exit 0
+          ;;
+        *)
+          echo "Error: No such keg: /opt/homebrew/Cellar/${3}"
+          exit 1
+          ;;
+      esac
+    else
+      echo "mock: brew list $*"
+    fi
+    ;;
+  install)
+    echo "mock: brew install $*"
+    ;;
+  services)
+    case "${2:-}" in
+      start|stop|restart)
+        echo "mock: brew services ${2} ${3:-}"
+        ;;
+      list)
+        echo "mock: brew services list"
+        ;;
+      *)
+        echo "mock: brew services $*"
+        ;;
+    esac
+    ;;
+  info)
+    echo "mock: brew info $*"
+    ;;
+  tap)
+    echo "mock: brew tap $*"
+    ;;
+  *)
+    echo "mock: brew $*"
+    ;;
 esac
 exit 0

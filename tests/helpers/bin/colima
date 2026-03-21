@@ -1,0 +1,23 @@
+#!/bin/bash
+# Mock colima for testing -- simulates colima CLI
+# MOCK_COLIMA_STATUS="running"|"stopped" (default: stopped)
+_status="${MOCK_COLIMA_STATUS:-stopped}"
+case "$1" in
+  status)
+    if [ "$_status" = "running" ]; then
+      echo "INFO[0000] colima is running using QEMU"
+      exit 0
+    else
+      echo "FATA[0000] colima is not running"
+      exit 1
+    fi
+    ;;
+  start)
+    echo "mock: colima start $*"
+    exit 0
+    ;;
+  *)
+    echo "mock: colima $*"
+    exit 0
+    ;;
+esac

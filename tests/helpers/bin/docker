@@ -1,7 +1,9 @@
 #!/bin/bash
-# Mock docker for testing socket connectivity
+# Mock docker for testing socket connectivity and compose version
 # MOCK_DOCKER_SOCKET="desktop"|"colima"|"both"|"none" (default: none)
+# MOCK_COMPOSE_VERSION="Docker Compose version v2.32.4"|"none" (default: v2.32.4)
 _socket="${MOCK_DOCKER_SOCKET:-none}"
+_compose_ver="${MOCK_COMPOSE_VERSION:-Docker Compose version v2.32.4}"
 case "$1" in
   info)
     if [ "$_socket" = "none" ]; then
@@ -19,6 +21,17 @@ case "$1" in
         [ "$_socket" != "none" ] && exit 0 || exit 1
         ;;
     esac
+    ;;
+  compose)
+    if [ "${2:-}" = "version" ]; then
+      if [ "$_compose_ver" = "none" ]; then
+        exit 1
+      fi
+      echo "$_compose_ver"
+      exit 0
+    fi
+    echo "mock: docker compose $*"
+    exit 0
     ;;
   *)
     echo "mock: docker $*"
