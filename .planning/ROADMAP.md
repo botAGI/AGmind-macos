@@ -78,11 +78,11 @@ Plans:
   3. `docker compose version` confirms Compose v2 is available; if not, the installer aborts with a clear remediation message
   4. Ollama is installed via Homebrew (or existing install is reused), `brew services start ollama` succeeds, and `http://localhost:11434/api/tags` responds within 60 seconds
   5. `/var/run/docker.sock` exists (symlinked if necessary) and `DOCKER_RUNTIME` is exported for downstream use
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — lib/docker.sh with Docker runtime detection, Colima install/start, socket fix, Compose v2 verify, and BATS tests
+- [ ] 04-02-PLAN.md — lib/ollama.sh with native Ollama install/start/wait, BATS tests, and install.sh phase wiring
 
 ### Phase 5: Config Generation
 **Goal**: All configuration files needed to launch the stack are rendered from templates with correct values for the user's choices and system
