@@ -44,10 +44,10 @@
 
 ### Ollama Setup
 
-- [ ] **OLLAMA-01**: `install_ollama()` installs Ollama via `brew install ollama` (idempotent — skips if already installed)
-- [ ] **OLLAMA-02**: `start_ollama()` starts Ollama via `brew services start ollama` and waits for readiness
-- [ ] **OLLAMA-03**: `wait_for_ollama()` polls `http://localhost:11434/api/tags` in a bash loop (no `timeout` command) with 60-second limit
-- [ ] **OLLAMA-04**: Ollama runs natively on the host (never in Docker); Docker containers reach it via `http://host.docker.internal:11434`
+- [x] **OLLAMA-01**: `install_ollama()` installs Ollama via `brew install ollama` (idempotent — skips if already installed)
+- [x] **OLLAMA-02**: `start_ollama()` starts Ollama via `brew services start ollama` and waits for readiness
+- [x] **OLLAMA-03**: `wait_for_ollama()` polls `http://localhost:11434/api/tags` in a bash loop (no `timeout` command) with 60-second limit
+- [x] **OLLAMA-04**: Ollama runs natively on the host (never in Docker); Docker containers reach it via `http://host.docker.internal:11434`
 
 ### Configuration
 
@@ -154,10 +154,10 @@
 | DOCKER-04 | Phase 4 | Complete |
 | DOCKER-05 | Phase 4 | Complete |
 | DOCKER-06 | Phase 4 | Complete |
-| OLLAMA-01 | Phase 4 | Pending |
-| OLLAMA-02 | Phase 4 | Pending |
-| OLLAMA-03 | Phase 4 | Pending |
-| OLLAMA-04 | Phase 4 | Pending |
+| OLLAMA-01 | Phase 4 | Complete |
+| OLLAMA-02 | Phase 4 | Complete |
+| OLLAMA-03 | Phase 4 | Complete |
+| OLLAMA-04 | Phase 4 | Complete |
 | CONFIG-01 | Phase 5 | Pending |
 | CONFIG-02 | Phase 5 | Pending |
 | CONFIG-03 | Phase 5 | Pending |
