@@ -20,6 +20,12 @@ source "${SCRIPT_DIR}/lib/detect.sh"
 # Source wizard module
 source "${SCRIPT_DIR}/lib/wizard.sh"
 
+# Source docker module
+source "${SCRIPT_DIR}/lib/docker.sh"
+
+# Source ollama module
+source "${SCRIPT_DIR}/lib/ollama.sh"
+
 # =============================================================================
 # Defaults for optional variables (must be set before arg parsing due to set -u)
 # =============================================================================
@@ -145,6 +151,25 @@ phase_1_diagnostics() {
 
 phase_2_wizard() {
     run_wizard
+}
+
+phase_3_prerequisites() {
+    detect_docker_runtime
+    if [ "$DOCKER_RUNTIME" = "none" ]; then
+        install_colima
+        start_colima
+        detect_docker_runtime  # re-detect after install
+    fi
+    fix_docker_socket
+    setup_compose_plugin
+    verify_compose
+    log_info "Docker runtime ready: ${DOCKER_RUNTIME}"
+}
+
+phase_4_ollama() {
+    install_ollama
+    start_ollama
+    log_info "Ollama setup complete"
 }
 
 # =============================================================================
