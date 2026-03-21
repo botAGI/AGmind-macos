@@ -1,0 +1,4 @@
+#!/bin/bash
+# Mock sudo for testing -- runs command without privilege escalation
+# Simply executes the remaining arguments as a command
+"$@"

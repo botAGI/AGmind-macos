@@ -15,10 +15,10 @@ set -eEuo pipefail
 # =============================================================================
 
 readonly AGMIND_VERSION="1.0.0"
-readonly AGMIND_DIR="/opt/agmind"
-readonly AGMIND_LOG_DIR="${AGMIND_DIR}/logs"
-readonly LOG_FILE="${AGMIND_LOG_DIR}/install.log"
-readonly STATE_FILE="${AGMIND_DIR}/.install-state"
+readonly AGMIND_DIR="${AGMIND_DIR:-/opt/agmind}"
+readonly AGMIND_LOG_DIR="${AGMIND_LOG_DIR:-${AGMIND_DIR}/logs}"
+readonly LOG_FILE="${LOG_FILE:-${AGMIND_LOG_DIR}/install.log}"
+readonly STATE_FILE="${STATE_FILE:-${AGMIND_DIR}/.install-state}"
 
 # =============================================================================
 # ANSI Colors (generated as actual escape bytes via printf, NOT literal \033)

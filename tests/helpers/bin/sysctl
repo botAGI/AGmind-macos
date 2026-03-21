@@ -1,0 +1,13 @@
+#!/bin/bash
+# Mock sysctl for testing -- returns 32GB RAM by default
+case "$1" in
+  hw.memsize)   echo "hw.memsize: 34359738368" ;;  # 32 GB
+  -n)
+    case "$2" in
+      hw.memsize) echo "34359738368" ;;
+      *)          echo "0" ;;
+    esac
+    ;;
+  *)            echo "mock: sysctl $*" ;;
+esac
+exit 0

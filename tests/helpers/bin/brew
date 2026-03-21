@@ -1,0 +1,11 @@
+#!/bin/bash
+# Mock brew for testing -- returns success for common operations
+case "$1" in
+  --prefix)  echo "/opt/homebrew" ;;
+  install)   echo "mock: brew install $*" ;;
+  services)  echo "mock: brew services $*" ;;
+  info)      echo "mock: brew info $*" ;;
+  tap)       echo "mock: brew tap $*" ;;
+  *)         echo "mock: brew $*" ;;
+esac
+exit 0
