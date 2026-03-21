@@ -26,5 +26,5 @@ if [[ $# -gt 0 ]]; then
   /bin/bash -c "bats $*"
 else
   echo "Running all unit tests..."
-  /bin/bash -c "bats ${PROJECT_ROOT}/tests/unit/"
+  /bin/bash -c "bats '${PROJECT_ROOT}/tests/unit/'"
 fi
