@@ -105,7 +105,7 @@ _wizard_ask() {
     local choice=""
 
     while true; do
-        printf "\n%s\n" "$prompt"
+        printf "\n%s\n" "$prompt" >&2
         local i=0
         while [ $i -lt $count ]; do
             local num=$((i + 1))
@@ -113,10 +113,10 @@ _wizard_ask() {
             if [ "$num" -eq "$default_num" ]; then
                 marker=" (default)"
             fi
-            printf "  [%d] %s%s\n" "$num" "${options[$i]}" "$marker"
+            printf "  [%d] %s%s\n" "$num" "${options[$i]}" "$marker" >&2
             i=$((i + 1))
         done
-        printf "Choice [%d]: " "$default_num"
+        printf "Choice [%d]: " "$default_num" >&2
         read -r choice
         if [ -z "$choice" ]; then
             choice="$default_num"
@@ -130,7 +130,7 @@ _wizard_ask() {
                 fi
                 ;;
         esac
-        printf "Invalid choice. Please enter 1-%d:\n" "$count"
+        printf "Invalid choice. Please enter 1-%d:\n" "$count" >&2
     done
 }
 
@@ -172,7 +172,7 @@ _wizard_ask_llm_model() {
     done
 
     while true; do
-        printf "\nLLM model (your system has %dGB unified memory):\n" "$ram"
+        printf "\nLLM model (your system has %dGB unified memory):\n" "$ram" >&2
         i=0
         while [ $i -lt $count ]; do
             local entry="${_LLM_MODELS[$i]}"
@@ -187,10 +187,10 @@ _wizard_ask_llm_model() {
                 annotation=" (requires ${req}GB+, you have ${ram}GB)"
             fi
 
-            printf "  [%d] %s%s\n" "$num" "$tag" "$annotation"
+            printf "  [%d] %s%s\n" "$num" "$tag" "$annotation" >&2
             i=$((i + 1))
         done
-        printf "Choice [%d]: " "$recommended_num"
+        printf "Choice [%d]: " "$recommended_num" >&2
         read -r choice
         if [ -z "$choice" ]; then
             choice="$recommended_num"
@@ -205,7 +205,7 @@ _wizard_ask_llm_model() {
                 fi
                 ;;
         esac
-        printf "Invalid choice. Please enter 1-%d:\n" "$count"
+        printf "Invalid choice. Please enter 1-%d:\n" "$count" >&2
     done
 }
 
