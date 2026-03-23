@@ -176,6 +176,13 @@ preflight_checks() {
     # Skip all checks if SKIP_PREFLIGHT is set
     if [ "${SKIP_PREFLIGHT:-0}" = "1" ]; then
         log_warn "Preflight checks skipped (SKIP_PREFLIGHT=1)"
+        # Still run detection so downstream modules have needed variables
+        detect_os
+        detect_ram
+        detect_disk
+        detect_homebrew
+        detect_docker
+        detect_ollama
         return 0
     fi
 

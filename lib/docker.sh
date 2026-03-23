@@ -55,7 +55,7 @@ detect_docker_runtime() {
 setup_compose_plugin() {
     local docker_dir="${HOME}/.docker"
     local config_file="${docker_dir}/config.json"
-    local plugins_dir="${BREW_PREFIX}/lib/docker/cli-plugins"
+    local plugins_dir="${BREW_PREFIX:-/opt/homebrew}/lib/docker/cli-plugins"
 
     mkdir -p "$docker_dir"
 
