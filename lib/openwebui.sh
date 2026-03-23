@@ -94,7 +94,7 @@ _verify_openwebui_admin() {
     signup_result=$(curl -sf -X POST \
         -H "Content-Type: application/json" \
         -d "$payload" \
-        http://localhost:3000/api/v1/auths/signup 2>/dev/null) || true
+        http://localhost/api/v1/auths/signup 2>/dev/null) || true
 
     if [ -n "$signup_result" ]; then
         log_info "Admin account created via signup API"
