@@ -36,9 +36,24 @@ case "$1" in
       echo "$_compose_ver"
       exit 0
     fi
+    # compose down
+    if [ "${2:-}" = "down" ]; then
+      echo "mock: docker compose down ${3:-}"
+      exit 0
+    fi
+    # compose logs
+    if [ "${2:-}" = "logs" ]; then
+      echo "mock: docker compose logs ${*:3}"
+      exit 0
+    fi
     # compose ps with various flags
     if [ "${2:-}" = "ps" ]; then
       case "${3:-}" in
+        --format)
+          # compose ps --format for status command
+          echo "${MOCK_COMPOSE_PS_FORMAT_OUTPUT:-}"
+          exit 0
+          ;;
         --status)
           # MOCK_COMPOSE_RUNNING_COUNT controls how many "running" containers
           if [ "${4:-}" = "running" ] && [ "${5:-}" = "-q" ]; then

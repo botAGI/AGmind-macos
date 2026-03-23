@@ -1,0 +1,9 @@
+#!/bin/bash
+# Mock ipconfig for testing
+# MOCK_IP_ADDR controls getifaddr output (default: "192.168.1.100")
+if [ "${1:-}" = "getifaddr" ]; then
+    echo "${MOCK_IP_ADDR:-192.168.1.100}"
+    exit 0
+fi
+echo "mock: ipconfig $*"
+exit 0

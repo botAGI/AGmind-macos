@@ -32,7 +32,12 @@ case "$1" in
         echo "mock: brew services ${2} ${3:-}"
         ;;
       list)
-        echo "mock: brew services list"
+        # MOCK_BREW_SERVICES_OUTPUT for parseable output (grep-friendly)
+        if [ -n "${MOCK_BREW_SERVICES_OUTPUT:-}" ]; then
+          echo "$MOCK_BREW_SERVICES_OUTPUT"
+        else
+          echo "ollama started $(whoami) ~/Library/LaunchAgents/homebrew.mxcl.ollama.plist"
+        fi
         ;;
       *)
         echo "mock: brew services $*"
