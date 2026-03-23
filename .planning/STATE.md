@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 07-01-PLAN.md
-last_updated: "2026-03-23T09:32:36.219Z"
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-03-23T12:53:39.962Z"
 last_activity: 2026-03-22 -- Completed Plan 06-04 (LaunchAgent BATS tests, launchctl/plutil mocks)
 progress:
   total_phases: 7
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 15
-  completed_plans: 14
-  percent: 92
+  completed_plans: 15
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** One `bash install.sh` command deploys a full local AI RAG stack on macOS with native Metal-accelerated Ollama inference
-**Current focus:** Phase 6: Stack Deployment
+**Current focus:** Phase 7: CLI (Complete)
 
 ## Current Position
 
-Phase: 6 of 7 (Stack Deployment) -- COMPLETE
-Plan: 4 of 4 in current phase
-Status: Completed 06-04 (LaunchAgent BATS tests, launchctl/plutil mocks)
-Last activity: 2026-03-22 -- Completed Plan 06-04 (LaunchAgent BATS tests, launchctl/plutil mocks)
+Phase: 7 of 7 (CLI) -- COMPLETE
+Plan: 2 of 2 in current phase
+Status: Completed 07-02 (CLI BATS tests for agmind.sh)
+Last activity: 2026-03-23 -- Completed Plan 07-02 (CLI BATS tests, mock enhancements)
 
-Progress: [█████████░] 92%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Progress: [█████████░] 92%
 | Phase 06 P04 | 2min | 2 tasks | 3 files |
 | Phase 06 P03 | 4min | 2 tasks | 8 files |
 | Phase 07 P01 | 3min | 2 tasks | 2 files |
+| Phase 07 P02 | 4min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,8 @@ Recent decisions affecting current work:
 - [Phase 06]: Function redefinition pattern for reduced-attempt failure tests in BATS (avoids modifying source for test speed)
 - [Phase 07]: Used docker compose logs for CLI logs command (simpler than docker logs passthrough)
 - [Phase 07]: Doctor checks standalone (not reusing preflight_checks) for live-system context
+- [Phase 07]: CLI tests invoke agmind.sh as standalone subprocess (not sourced) since it has its own dispatcher
+- [Phase 07]: Uninstall tests pass env vars explicitly to bash -c subshell for mock isolation
 
 ### Pending Todos
 
@@ -119,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T09:32:36.217Z
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-03-23T12:53:39.960Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None

@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 4: Docker and Ollama** - Docker runtime setup (Colima or Desktop) and native Ollama installation
 - [ ] **Phase 5: Config Generation** - Template rendering and config file generation from all upstream variables
 - [ ] **Phase 6: Stack Deployment** - Container orchestration, health verification, model pull, LaunchAgent scheduling
-- [ ] **Phase 7: CLI** - Post-install agmind command-line tool for day-2 operations
+- [x] **Phase 7: CLI** - Post-install agmind command-line tool for day-2 operations (completed 2026-03-23)
 
 ## Phase Details
 
@@ -128,7 +128,7 @@ Plans:
   3. `agmind doctor` runs preflight-style checks on the live system and prints `[PASS/WARN/FAIL]` for each
   4. `agmind backup` creates a timestamped backup in `~/Library/Application Support/AGMind/backups/`
   5. `agmind uninstall` removes all containers, volumes, LaunchAgents, and `/opt/agmind/` after user confirms the prompt
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 07-01-PLAN.md — scripts/agmind.sh CLI dispatcher with all commands and install.sh phase_9_complete wiring
@@ -149,4 +149,4 @@ Note: Phase 3 (Wizard) and Phase 4 (Docker and Ollama) both depend on Phase 2 bu
 | 4. Docker and Ollama | 0/2 | Not started | - |
 | 5. Config Generation | 0/2 | Not started | - |
 | 6. Stack Deployment | 0/4 | Not started | - |
-| 7. CLI | 0/2 | Not started | - |
+| 7. CLI | 2/2 | Complete   | 2026-03-23 |
