@@ -77,14 +77,14 @@
 
 ### CLI Tool
 
-- [ ] **CLI-01**: `scripts/agmind.sh` installed to `/usr/local/bin/agmind` (or `/opt/agmind/bin/agmind` with PATH hint)
-- [ ] **CLI-02**: `agmind status` shows all Docker container states plus Ollama brew service status and local IP via `ipconfig getifaddr en0`
-- [ ] **CLI-03**: `agmind doctor` runs preflight checks on the running system and shows `[PASS/WARN/FAIL]` for each
-- [ ] **CLI-04**: `agmind stop` runs `docker compose down` then `brew services stop ollama`
-- [ ] **CLI-05**: `agmind start` runs `brew services start ollama`, waits for readiness, then `docker compose up -d`
-- [ ] **CLI-06**: `agmind logs [service]` passes through to `docker logs`
-- [ ] **CLI-07**: `agmind backup` runs manual backup to `~/Library/Application Support/AGMind/backups/`
-- [ ] **CLI-08**: `agmind uninstall` removes all containers, volumes, LaunchAgents, and `/opt/agmind/` after confirmation prompt
+- [x] **CLI-01**: `scripts/agmind.sh` installed to `/usr/local/bin/agmind` (or `/opt/agmind/bin/agmind` with PATH hint)
+- [x] **CLI-02**: `agmind status` shows all Docker container states plus Ollama brew service status and local IP via `ipconfig getifaddr en0`
+- [x] **CLI-03**: `agmind doctor` runs preflight checks on the running system and shows `[PASS/WARN/FAIL]` for each
+- [x] **CLI-04**: `agmind stop` runs `docker compose down` then `brew services stop ollama`
+- [x] **CLI-05**: `agmind start` runs `brew services start ollama`, waits for readiness, then `docker compose up -d`
+- [x] **CLI-06**: `agmind logs [service]` passes through to `docker logs`
+- [x] **CLI-07**: `agmind backup` runs manual backup to `~/Library/Application Support/AGMind/backups/`
+- [x] **CLI-08**: `agmind uninstall` removes all containers, volumes, LaunchAgents, and `/opt/agmind/` after confirmation prompt
 
 ### Testing
 
@@ -175,14 +175,14 @@
 | LAUNCH-02 | Phase 6 | Complete |
 | LAUNCH-03 | Phase 6 | Complete |
 | LAUNCH-04 | Phase 6 | Complete |
-| CLI-01 | Phase 7 | Pending |
-| CLI-02 | Phase 7 | Pending |
-| CLI-03 | Phase 7 | Pending |
-| CLI-04 | Phase 7 | Pending |
-| CLI-05 | Phase 7 | Pending |
-| CLI-06 | Phase 7 | Pending |
-| CLI-07 | Phase 7 | Pending |
-| CLI-08 | Phase 7 | Pending |
+| CLI-01 | Phase 7 | Complete |
+| CLI-02 | Phase 7 | Complete |
+| CLI-03 | Phase 7 | Complete |
+| CLI-04 | Phase 7 | Complete |
+| CLI-05 | Phase 7 | Complete |
+| CLI-06 | Phase 7 | Complete |
+| CLI-07 | Phase 7 | Complete |
+| CLI-08 | Phase 7 | Complete |
 | TEST-01 | Phase 1 | Complete |
 | TEST-02 | Phase 1 | Complete |
 | TEST-03 | Phase 1 | Complete |

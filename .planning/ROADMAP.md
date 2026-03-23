@@ -128,11 +128,11 @@ Plans:
   3. `agmind doctor` runs preflight-style checks on the live system and prints `[PASS/WARN/FAIL]` for each
   4. `agmind backup` creates a timestamped backup in `~/Library/Application Support/AGMind/backups/`
   5. `agmind uninstall` removes all containers, volumes, LaunchAgents, and `/opt/agmind/` after user confirms the prompt
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md — scripts/agmind.sh CLI dispatcher with all commands and install.sh phase_9_complete wiring
+- [ ] 07-02-PLAN.md — Mock enhancements and comprehensive BATS tests for CLI-01 through CLI-08
 
 ## Progress
 
