@@ -128,7 +128,7 @@ detect_ollama() {
 
     if [ -n "$port_result" ]; then
         # Something is listening on 11434, verify it is Ollama via API
-        if curl -sf http://localhost:11434/api/tags >/dev/null 2>&1; then
+        if curl -sf --connect-timeout 5 --max-time 10 http://localhost:11434/api/tags >/dev/null 2>&1; then
             OLLAMA_RUNNING=1
             log_debug "Ollama: running (API responding on port 11434)"
         else

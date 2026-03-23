@@ -72,16 +72,18 @@ setup_compose_plugin() {
         return 0
     fi
 
-    # Merge into existing JSON using python3 (available on stock macOS)
+    # SEC-04: Merge into existing JSON using python3 -- pass values via sys.argv
     python3 -c "
 import json, sys
-with open('${config_file}', 'r') as f:
+config_path = sys.argv[1]
+plugins_path = sys.argv[2]
+with open(config_path, 'r') as f:
     cfg = json.load(f)
-cfg['cliPluginsExtraDirs'] = ['${plugins_dir}']
-with open('${config_file}', 'w') as f:
+cfg['cliPluginsExtraDirs'] = [plugins_path]
+with open(config_path, 'w') as f:
     json.dump(cfg, f, indent=2)
     f.write('\n')
-"
+" "$config_file" "$plugins_dir"
     log_info "Added cliPluginsExtraDirs to ${config_file}"
 }
 

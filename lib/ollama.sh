@@ -73,7 +73,7 @@ wait_for_ollama() {
     log_info "Waiting for Ollama API..."
 
     while [ "$attempt" -lt "$max_attempts" ]; do
-        if curl -sf http://localhost:11434/api/tags >/dev/null 2>&1; then
+        if curl -sf --connect-timeout 5 --max-time 10 http://localhost:11434/api/tags >/dev/null 2>&1; then
             log_info "Ollama is ready"
             return 0
         fi

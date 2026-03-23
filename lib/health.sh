@@ -98,7 +98,7 @@ _check_ollama_health() {
     log_info "Checking Ollama API health..."
 
     while [ "$attempt" -lt "$max_attempts" ]; do
-        if curl -sf http://localhost:11434/api/tags >/dev/null 2>&1; then
+        if curl -sf --connect-timeout 5 --max-time 10 http://localhost:11434/api/tags >/dev/null 2>&1; then
             log_info "[PASS] Ollama API is healthy"
             return 0
         fi

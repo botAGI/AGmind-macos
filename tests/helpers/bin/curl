@@ -7,32 +7,10 @@ _api="${MOCK_OLLAMA_API:-ok}"
 _webui="${MOCK_OPENWEBUI_API:-ok}"
 _signup="${MOCK_OPENWEBUI_SIGNUP:-ok}"
 
-# Check for Open WebUI accessibility calls (port 80, localhost)
+# Check for Open WebUI signup API calls (must come before general localhost match)
 for arg in "$@"; do
   case "$arg" in
-    http://localhost/*)
-      if [ "$_webui" = "ok" ]; then
-        echo '{"status":"ok"}'
-        exit 0
-      else
-        exit 1
-      fi
-      ;;
-    http://localhost/)
-      if [ "$_webui" = "ok" ]; then
-        echo '{"status":"ok"}'
-        exit 0
-      else
-        exit 1
-      fi
-      ;;
-  esac
-done
-
-# Check for Open WebUI signup API calls (port 3000)
-for arg in "$@"; do
-  case "$arg" in
-    http://localhost:3000/api/v1/auths/signup*)
+    http://localhost/api/v1/auths/signup*|http://localhost:3000/api/v1/auths/signup*)
       case "$_signup" in
         ok)
           echo '{"id":"admin-id","email":"admin@agmind.local","name":"AGMind Admin"}'
@@ -46,6 +24,20 @@ for arg in "$@"; do
           exit 1
           ;;
       esac
+      ;;
+  esac
+done
+
+# Check for Open WebUI accessibility calls (port 80, localhost)
+for arg in "$@"; do
+  case "$arg" in
+    http://localhost/|http://localhost)
+      if [ "$_webui" = "ok" ]; then
+        echo '{"status":"ok"}'
+        exit 0
+      else
+        exit 1
+      fi
       ;;
   esac
 done

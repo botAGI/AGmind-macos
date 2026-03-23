@@ -43,10 +43,23 @@ _load_or_generate_secrets() {
     if [[ -f "$creds_file" ]]; then
         log_info "Reusing existing secrets from ${creds_file}"
         while IFS='=' read -r key value; do
+            # SEC-03: whitelist allowed credential keys
             case "$key" in
-                \#*|"") continue ;;
+                DB_PASSWORD|REDIS_PASSWORD|DIFY_SECRET_KEY|OPENWEBUI_SECRET|\
+SANDBOX_API_KEY|WEAVIATE_API_KEY|QDRANT_API_KEY|\
+PLUGIN_DAEMON_KEY|DIFY_INNER_API_KEY|\
+WEBUI_ADMIN_EMAIL|WEBUI_ADMIN_PASSWORD)
+                    # SEC-09: set as shell variable, not exported, to avoid leaking secrets to child processes
+                    eval "$key=\$value"
+                    ;;
+                \#*|"")
+                    continue
+                    ;;
+                *)
+                    log_warn "Ignoring unknown key in credentials.txt: ${key}"
+                    continue
+                    ;;
             esac
-            export "$key=$value"
         done < "$creds_file"
     else
         log_info "Generating new secrets..."
@@ -59,9 +72,9 @@ _load_or_generate_secrets() {
         QDRANT_API_KEY=$(_generate_secret)
         PLUGIN_DAEMON_KEY=$(_generate_secret)
         DIFY_INNER_API_KEY=$(_generate_secret)
-        export DB_PASSWORD REDIS_PASSWORD DIFY_SECRET_KEY OPENWEBUI_SECRET
-        export SANDBOX_API_KEY WEAVIATE_API_KEY QDRANT_API_KEY
-        export PLUGIN_DAEMON_KEY DIFY_INNER_API_KEY
+        # SEC-09: secrets are set as shell variables only, not exported,
+        # to avoid leaking them to child processes via environment.
+        # They are used within this shell session by _render_env_file and _write_credentials_file.
         _write_credentials_file
     fi
 }
@@ -139,6 +152,20 @@ _get_docker_socket_volume() {
 }
 
 # =============================================================================
+# Sed Escape Helper
+# =============================================================================
+
+# SEC-01: Escape sed special characters in replacement values.
+# Handles: backslash, pipe (delimiter), ampersand, forward slash.
+# Compatible with Bash 3.2 (no ${var//} with special chars issues).
+_sed_escape() {
+    local val="$1"
+    # Order matters: escape backslash first, then other specials
+    val=$(printf '%s' "$val" | sed -e 's/\\/\\\\/g' -e 's/|/\\|/g' -e 's/&/\\&/g' -e 's|/|\\/|g')
+    printf '%s' "$val"
+}
+
+# =============================================================================
 # Template Rendering
 # =============================================================================
 
@@ -167,10 +194,10 @@ _render_env_file() {
     _atomic_sed "s|{{PLUGIN_DAEMON_KEY}}|${PLUGIN_DAEMON_KEY}|g" "$output"
     _atomic_sed "s|{{DIFY_INNER_API_KEY}}|${DIFY_INNER_API_KEY}|g" "$output"
 
-    # Substitute wizard choices
-    _atomic_sed "s|{{WIZARD_LLM_MODEL}}|${WIZARD_LLM_MODEL}|g" "$output"
-    _atomic_sed "s|{{WIZARD_EMBED_MODEL}}|${WIZARD_EMBED_MODEL}|g" "$output"
-    _atomic_sed "s|{{WIZARD_VECTOR_DB}}|${WIZARD_VECTOR_DB}|g" "$output"
+    # Substitute wizard choices (SEC-01: escape user-supplied values)
+    _atomic_sed "s|{{WIZARD_LLM_MODEL}}|$(_sed_escape "${WIZARD_LLM_MODEL}")|g" "$output"
+    _atomic_sed "s|{{WIZARD_EMBED_MODEL}}|$(_sed_escape "${WIZARD_EMBED_MODEL}")|g" "$output"
+    _atomic_sed "s|{{WIZARD_VECTOR_DB}}|$(_sed_escape "${WIZARD_VECTOR_DB}")|g" "$output"
 
     # Build and substitute COMPOSE_PROFILES
     local profiles
@@ -185,7 +212,8 @@ _render_env_file() {
     fi
     _atomic_sed "s|{{ETL_TYPE}}|${etl_type}|g" "$output"
 
-    log_info "Generated ${output} (profile: ${profile})"
+    chmod 600 "$output"
+    log_info "Generated ${output} (profile: ${profile}, mode 600)"
 }
 
 # Render nginx.conf from template.

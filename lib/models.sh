@@ -23,7 +23,8 @@ _pull_model_if_needed() {
     local model_list
     model_list=$(ollama list 2>/dev/null) || true
 
-    if echo "$model_list" | grep -q "$model"; then
+    # SEC-06: Use fixed-string grep to avoid regex injection from model name
+    if echo "$model_list" | grep -qF "$model"; then
         log_info "Model ${model} already present -- skipping pull"
         return 0
     fi

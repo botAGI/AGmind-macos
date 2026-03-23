@@ -42,7 +42,12 @@ _inject_admin_credentials() {
     printf "\n# Open WebUI Admin\nWEBUI_ADMIN_EMAIL=%s\nWEBUI_ADMIN_PASSWORD=%s\n" \
         "$admin_email" "$admin_pass" >> "$creds_file"
 
-    log_info "Open WebUI admin credentials injected into .env"
+    # SEC-13: Admin password is stored in shared .env file which is read by Docker Compose.
+    # This is a known architectural trade-off -- Open WebUI requires WEBUI_ADMIN_PASSWORD
+    # as an env var for auto-provisioning. Ensure .env is not world-readable.
+    chmod 600 "$env_file"
+
+    log_info "Open WebUI admin credentials injected into .env (mode 600)"
 }
 
 # =============================================================================
@@ -61,7 +66,7 @@ _verify_openwebui_admin() {
     log_info "Verifying Open WebUI accessibility..."
 
     while [ "$attempt" -lt "$max_attempts" ]; do
-        if curl -sf http://localhost/ >/dev/null 2>&1; then
+        if curl -sf --connect-timeout 5 --max-time 10 http://localhost/ >/dev/null 2>&1; then
             log_info "Open WebUI is accessible at http://localhost/"
             break
         fi
@@ -87,11 +92,12 @@ _verify_openwebui_admin() {
         return 0
     fi
 
+    # SEC-02: Use python3 for safe JSON construction (no injection)
     local payload
-    payload=$(printf '{"email":"%s","password":"%s","name":"AGMind Admin"}' "$admin_email" "$admin_pass")
+    payload=$(python3 -c "import json,sys; print(json.dumps({'email':sys.argv[1],'password':sys.argv[2],'name':'AGMind Admin'}))" "$admin_email" "$admin_pass")
 
     local signup_result
-    signup_result=$(curl -sf -X POST \
+    signup_result=$(curl -sf --connect-timeout 5 --max-time 10 -X POST \
         -H "Content-Type: application/json" \
         -d "$payload" \
         http://localhost/api/v1/auths/signup 2>/dev/null) || true

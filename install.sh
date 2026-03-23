@@ -4,6 +4,7 @@
 # Compatible with /bin/bash 3.2.57 (stock macOS)
 
 set -eEuo pipefail
+umask 077
 
 # =============================================================================
 # Script directory resolution

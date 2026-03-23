@@ -212,6 +212,8 @@ STUB
     mkdir -p "$la_dir"
     touch "$la_dir/com.agmind.backup.plist"
     touch "$la_dir/com.agmind.health.plist"
+    # SEC-07: create .install-state marker so safety check passes
+    touch "${AGMIND_DIR}/.install-state"
     export HOME="${BATS_TEST_TMPDIR}"
     run bash -c "echo 'y' | HOME='${BATS_TEST_TMPDIR}' AGMIND_DIR='${AGMIND_DIR}' AGMIND_LOG_DIR='${AGMIND_LOG_DIR}' LOG_FILE='${LOG_FILE}' STATE_FILE='${STATE_FILE}' PATH='${PATH}' MOCK_DOCKER_SOCKET='${MOCK_DOCKER_SOCKET}' MOCK_BREW_SERVICES_OUTPUT='${MOCK_BREW_SERVICES_OUTPUT}' '$CLI' uninstall"
     assert_success
@@ -219,6 +221,8 @@ STUB
 }
 
 @test "CLI-08: uninstall removes docker volumes with -v flag" {
+    # SEC-07: create .install-state marker so safety check passes
+    touch "${AGMIND_DIR}/.install-state"
     run bash -c "echo 'y' | HOME='${BATS_TEST_TMPDIR}' AGMIND_DIR='${AGMIND_DIR}' AGMIND_LOG_DIR='${AGMIND_LOG_DIR}' LOG_FILE='${LOG_FILE}' STATE_FILE='${STATE_FILE}' PATH='${PATH}' MOCK_DOCKER_SOCKET='${MOCK_DOCKER_SOCKET}' MOCK_BREW_SERVICES_OUTPUT='${MOCK_BREW_SERVICES_OUTPUT}' '$CLI' uninstall"
     assert_success
     assert_output --partial "docker compose down -v"

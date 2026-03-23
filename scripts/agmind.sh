@@ -153,7 +153,7 @@ cmd_doctor() {
     fi
 
     # 4. Ollama API
-    if curl -sf http://localhost:11434/api/tags >/dev/null 2>&1; then
+    if curl -sf --connect-timeout 5 --max-time 10 http://localhost:11434/api/tags >/dev/null 2>&1; then
         _doctor_pass "Ollama API"
     else
         _doctor_fail "Ollama API not responding"
@@ -319,7 +319,17 @@ cmd_uninstall() {
     # 4. Remove CLI symlink
     sudo rm -f /usr/local/bin/agmind 2>/dev/null || true
 
-    # 5. Remove install directory
+    # 5. Remove install directory (SEC-07: validate path before rm -rf)
+    case "$AGMIND_DIR" in
+        /|/usr|/etc|/var|/home|/Users|"$HOME"|/System|/Library|/bin|/sbin|/tmp)
+            log_error "Refusing to remove dangerous path: ${AGMIND_DIR}"
+            exit 1
+            ;;
+    esac
+    if [ ! -f "${AGMIND_DIR}/.install-state" ]; then
+        log_error "Safety check failed: ${AGMIND_DIR}/.install-state not found -- not an AGMind directory"
+        exit 1
+    fi
     sudo rm -rf "$AGMIND_DIR"
 
     printf "\n%s\n" "${_GREEN}AGMind uninstalled successfully${_NC}"
