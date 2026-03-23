@@ -57,7 +57,11 @@ _check_port() {
     local port="$1"
     local output
     output=$(lsof -iTCP:"${port}" -sTCP:LISTEN -P -n 2>/dev/null) || output=""
-    [ -z "$output" ] && return 1
+    if [ -z "$output" ]; then
+        # Port is free — return empty string (no return 1 to avoid ERR trap)
+        echo ""
+        return 0
+    fi
     # Port is in use -- extract process name and PID from second line
     local proc_name pid
     proc_name=$(echo "$output" | awk 'NR==2 {print $1}')
@@ -70,8 +74,7 @@ detect_ports() {
     local port result
     PORT_CONFLICTS=""
     for port in 80 443 3000 11434; do
-        result=""
-        result=$(_check_port "$port") || true
+        result=$(_check_port "$port")
         if [ -n "$result" ]; then
             if [ -n "$PORT_CONFLICTS" ]; then
                 PORT_CONFLICTS="${PORT_CONFLICTS}
@@ -248,8 +251,11 @@ preflight_checks() {
     detect_ports
     local port proc_info proc_name pid
     for port in 80 443 3000 11434; do
+        # Extract port info without grep (avoids ERR trap on no-match)
         proc_info=""
-        proc_info=$(echo "$PORT_CONFLICTS" | grep "^${port}:" 2>/dev/null) || true
+        if [ -n "$PORT_CONFLICTS" ]; then
+            proc_info=$(printf '%s\n' "$PORT_CONFLICTS" | awk -v p="${port}:" '$0 ~ "^"p {print; exit}')
+        fi
         if [ -n "$proc_info" ]; then
             # Extract process name and PID from "port:procname:pid"
             proc_name=$(echo "$proc_info" | cut -d: -f2)

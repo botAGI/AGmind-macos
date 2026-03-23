@@ -110,10 +110,11 @@ setup() {
 # Group 4: detect_ports / _check_port (DETECT-04)
 # =============================================================================
 
-@test "_check_port returns 1 when port is free" {
+@test "_check_port returns empty when port is free" {
     export MOCK_PORTS_IN_USE=""
     run _check_port 80
-    assert_failure
+    assert_success
+    assert_output ""
 }
 
 @test "_check_port returns 0 and echoes process info when port in use" {
@@ -124,10 +125,11 @@ setup() {
     assert_output --partial "1234"
 }
 
-@test "_check_port returns 1 for unmatched port" {
+@test "_check_port returns empty for unmatched port" {
     export MOCK_PORTS_IN_USE="80:nginx:1234"
     run _check_port 3000
-    assert_failure
+    assert_success
+    assert_output ""
 }
 
 @test "detect_ports populates PORT_CONFLICTS for occupied ports" {
