@@ -1,5 +1,9 @@
 # CLAUDE.md — AGMind macOS Installer
 
+## Communication
+
+- Always respond in Russian (русский язык)
+
 ## Project Overview
 
 Native macOS installer for AGMind RAG stack. Bash-based, 9-phase orchestration.
@@ -72,8 +76,8 @@ agmind-mac/
 
 ### Bash
 
-- **POSIX-compatible** where possible; bash 5+ features only when necessary
-- **BSD sed only** — always `sed -i ''` (no GNU sed dependency unless explicitly brewed)
+- **Bash 3.2 compatibility REQUIRED** — macOS ships with Bash 3.2.57 (GPLv2 freeze). NO associative arrays (`declare -A`), NO `mapfile`/`readarray`, NO `${var,,}` lowercase. Test every script against `/bin/bash` not `/usr/local/bin/bash`
+- **BSD sed only** — always `sed -i '' -E` (empty string after -i, use -E not -r for extended regex)
 - **No `timeout` command** — replace with manual poll loops with counter
 - **No GNU coreutils assumptions** — test on stock macOS zsh/bash
 - Idempotent: every phase can be re-run safely
@@ -184,3 +188,4 @@ agmind uninstall # full removal
 4. **Minimal dependencies** — prefer macOS built-ins over brew installs
 5. **Clear UX** — every phase shows progress; errors show remediation steps
 6. **Test coverage** — every lib/*.sh function has a corresponding bats test
+общайся на русском !

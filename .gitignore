@@ -1,1 +1,16 @@
+# GSD planning artifacts
 .planning/
+
+# Runtime install directory
+/opt/agmind/
+
+# macOS
+.DS_Store
+._*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
