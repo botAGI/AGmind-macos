@@ -191,6 +191,17 @@ phase_9_complete() {
     # Install LaunchAgents for scheduled backup and health checks
     _install_launch_agents
 
+    # Install CLI tool
+    sudo cp "${SCRIPT_DIR}/scripts/agmind.sh" "${AGMIND_DIR}/scripts/agmind.sh"
+    sudo chown "$(whoami)" "${AGMIND_DIR}/scripts/agmind.sh"
+    chmod +x "${AGMIND_DIR}/scripts/agmind.sh"
+    if sudo ln -sf "${AGMIND_DIR}/scripts/agmind.sh" /usr/local/bin/agmind 2>/dev/null; then
+        log_info "CLI installed: /usr/local/bin/agmind"
+    else
+        log_warn "Could not create /usr/local/bin/agmind symlink"
+        log_warn "Add ${AGMIND_DIR}/scripts to your PATH, or run: sudo ln -sf ${AGMIND_DIR}/scripts/agmind.sh /usr/local/bin/agmind"
+    fi
+
     # Verify Open WebUI is accessible (includes POST signup fallback)
     _verify_openwebui_admin
 
