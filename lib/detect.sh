@@ -56,7 +56,8 @@ detect_disk() {
 _check_port() {
     local port="$1"
     local output
-    output=$(lsof -iTCP:"${port}" -sTCP:LISTEN -P -n 2>/dev/null) || return 1
+    output=$(lsof -iTCP:"${port}" -sTCP:LISTEN -P -n 2>/dev/null) || output=""
+    [ -z "$output" ] && return 1
     # Port is in use -- extract process name and PID from second line
     local proc_name pid
     proc_name=$(echo "$output" | awk 'NR==2 {print $1}')
