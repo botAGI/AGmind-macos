@@ -127,6 +127,9 @@ phase_7_health() {
     case "$profiles" in
         *weaviate*) healthcheck_services="$healthcheck_services weaviate" ;;
     esac
+    case "$profiles" in
+        *dbgpt*) healthcheck_services="$healthcheck_services dbgpt" ;;
+    esac
 
     # Poll healthcheck services
     local svc
