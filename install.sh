@@ -12,6 +12,24 @@ umask 077
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# =============================================================================
+# Early dry-run detection (must set AGMIND_DIR BEFORE sourcing common.sh
+# because common.sh makes it readonly)
+# =============================================================================
+
+_EARLY_DRY_RUN=0
+for _arg in "$@"; do
+    [ "$_arg" = "--dry-run" ] && _EARLY_DRY_RUN=1
+done
+if [ "$_EARLY_DRY_RUN" = "1" ]; then
+    _DRY_RUN_DIR=$(mktemp -d)
+    export AGMIND_DIR="$_DRY_RUN_DIR"
+    export AGMIND_LOG_DIR="${_DRY_RUN_DIR}/logs"
+    export LOG_FILE="${_DRY_RUN_DIR}/logs/install.log"
+    export STATE_FILE="${_DRY_RUN_DIR}/.install-state"
+    mkdir -p "${_DRY_RUN_DIR}/logs"
+fi
+
 # Source common utilities
 source "${SCRIPT_DIR}/lib/common.sh"
 
@@ -59,6 +77,7 @@ AGMind macOS Installer -- deploys a local AI RAG stack on macOS.
 Options:
   --verbose           Enable debug-level output
   --non-interactive   Skip all prompts (read from env vars)
+  --dry-run           Show what would happen without making changes
   --force-phase N     Re-run phase N even if already complete
   --help, -h          Show this help
 
@@ -75,11 +94,13 @@ EOF
 # =============================================================================
 
 FORCE_PHASE=""
+DRY_RUN="${DRY_RUN:-0}"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --verbose)         VERBOSE=1 ;;
         --non-interactive) NON_INTERACTIVE=1 ;;
+        --dry-run)         DRY_RUN=1; NON_INTERACTIVE=1; VERBOSE=1 ;;
         --force-phase)
             [[ $# -lt 2 ]] && die "Missing argument for --force-phase" "Usage: --force-phase N"
             FORCE_PHASE="$2"; shift ;;
@@ -88,6 +109,76 @@ while [[ $# -gt 0 ]]; do
     esac
     shift
 done
+
+# =============================================================================
+# Dry-Run Mode
+# =============================================================================
+
+if [ "$DRY_RUN" = "1" ]; then
+    # _DRY_RUN_DIR and AGMIND_DIR already set in early detection block above
+    HOME="$_DRY_RUN_DIR"
+
+    # Override commands that would modify the system
+    sudo() { "$@" 2>/dev/null || true; }
+    docker() {
+        case "$1" in
+            info) echo "Server Version: 29.0.0 (dry-run)" ;;
+            compose)
+                shift; case "$1" in
+                    version) echo "Docker Compose version v2.30.0 (dry-run)" ;;
+                    up) log_info "[DRY-RUN] docker compose up $*" ;;
+                    ps) [ "${2:-}" = "-q" ] && echo "dry-run-id" || [ "${2:-}" = "--services" ] && printf "api\nworker\nweb\ndb_postgres\nredis\nnginx\n" || echo "" ;;
+                    *) log_info "[DRY-RUN] docker compose $*" ;;
+                esac ;;
+            inspect) case "$*" in *Health*) echo "healthy" ;; *State*) echo "running" ;; *) echo "healthy" ;; esac ;;
+            *) log_info "[DRY-RUN] docker $*" ;;
+        esac
+    }
+    brew() {
+        case "$1" in
+            --prefix) echo "/opt/homebrew" ;;
+            install) log_info "[DRY-RUN] brew install $*" ;;
+            services) log_info "[DRY-RUN] brew services $*" ;;
+            info) [ "${3:-}" = "--json" ] && echo '[{"installed":[{"version":"0.17.0"}]}]' ;;
+            *) log_info "[DRY-RUN] brew $*" ;;
+        esac
+    }
+    ollama() {
+        case "$1" in
+            --version) echo "ollama version 0.17.0 (dry-run)" ;;
+            pull) log_info "[DRY-RUN] ollama pull $2" ;;
+            list) echo "NAME SIZE" ;;
+            *) log_info "[DRY-RUN] ollama $*" ;;
+        esac
+    }
+    curl() {
+        for arg in "$@"; do
+            case "$arg" in
+                */api/v1/auths/signup*) echo '{"id":"dry-run"}'; return 0 ;;
+                http://localhost/) echo "OK"; return 0 ;;
+                *11434*) echo '{"models":[]}'; return 0 ;;
+            esac
+        done
+        echo "dry-run-ok"; return 0
+    }
+    launchctl() { log_info "[DRY-RUN] launchctl $*"; }
+    plutil() { echo "$2: OK"; }
+    ipconfig() { echo "192.168.1.100"; }
+    sleep() { :; }
+
+    # Export overrides so subshells see them
+    export -f sudo docker brew ollama curl launchctl plutil ipconfig sleep 2>/dev/null || true
+
+    # Set detection vars and create fake socket
+    export DOCKER_RUNTIME=desktop
+    export DETECTED_ARCH=arm64
+    export DETECTED_RAM_GB=24
+    mkdir -p "${_DRY_RUN_DIR}/.docker/run" "${_DRY_RUN_DIR}/Library/LaunchAgents"
+    python3 -c "import socket,os; s=socket.socket(socket.AF_UNIX); p='${_DRY_RUN_DIR}/.docker/run/docker.sock'; s.bind(p)" 2>/dev/null || true
+
+    log_info "${_CYAN}${_BOLD}DRY-RUN MODE${_NC} — no system changes will be made"
+    log_info "Temp directory: ${_DRY_RUN_DIR}"
+fi
 
 # =============================================================================
 # Bootstrap: ensure directories exist
