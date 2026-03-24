@@ -17,7 +17,7 @@ Requirements for v1.1 Optional AI Tools. Each maps to roadmap phases.
 ### DB-GPT
 
 - [x] **DBGPT-01**: DB-GPT deploys via Docker Compose profile `dbgpt` (SQLite mode, Ollama proxy provider)
-- [ ] **DBGPT-02**: config.sh generates TOML config for DB-GPT with `proxy/ollama` provider pointing to `host.docker.internal:11434`
+- [x] **DBGPT-02**: config.sh generates TOML config for DB-GPT with `proxy/ollama` provider pointing to `host.docker.internal:11434`
 - [x] **DBGPT-03**: Wizard asks "Install DB-GPT? [y/N]" with env var `INSTALL_DBGPT` for non-interactive mode
 - [x] **DBGPT-04**: nginx proxies DB-GPT at `/dbgpt/` path (upstream port 5670)
 - [ ] **DBGPT-05**: Health check for DB-GPT container integrated into phase_7_health (conditional on profile)
@@ -59,7 +59,7 @@ Requirements for v1.1 Optional AI Tools. Each maps to roadmap phases.
 | ONBOOK-03 | Phase 9 | Complete |
 | ONBOOK-04 | Phase 9 | Complete |
 | DBGPT-01 | Phase 9 | Complete |
-| DBGPT-02 | Phase 9 | Pending |
+| DBGPT-02 | Phase 9 | Complete |
 | DBGPT-03 | Phase 8 | Complete |
 | DBGPT-04 | Phase 9 | Complete |
 | DBGPT-05 | Phase 10 | Pending |

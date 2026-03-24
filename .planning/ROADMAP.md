@@ -27,7 +27,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 **Milestone Goal:** Add Open Notebook and DB-GPT as optional wizard-selectable tools to the AGMind stack
 
 - [x] **Phase 8: Wizard Extension** — Interactive and non-interactive selection of optional AI tools (completed 2026-03-24)
-- [ ] **Phase 9: Config Generation and Templates** — Compose profiles, env templates, nginx routing, secrets, TOML config for optional tools
+- [x] **Phase 9: Config Generation and Templates** — Compose profiles, env templates, nginx routing, secrets, TOML config for optional tools (completed 2026-03-24)
 - [ ] **Phase 10: Health Checks and CLI** — Conditional health monitoring and CLI awareness of optional tools
 - [ ] **Phase 11: Test Suite** — BATS test coverage for wizard, config, and integration with optional tools
 
@@ -56,7 +56,7 @@ Plans:
   3. Open Notebook is accessible at `http://<host>/notebook/` via nginx reverse proxy (with WebSocket support for Streamlit)
   4. DB-GPT is accessible at `http://<host>/dbgpt/` via nginx reverse proxy
   5. Both tools reach native Ollama via `host.docker.internal:11434` (Open Notebook container env, DB-GPT via TOML config)
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 09-01-PLAN.md — Docker Compose services, version pins, TOML template, nginx markers, env placeholders
 - [ ] 09-02-PLAN.md — Extend config.sh with profile building, secrets, conditional nginx, TOML rendering
@@ -93,6 +93,6 @@ Plans:
 | 6. Stack Deployment | v1.0 | 4/4 | Complete | 2026-03-22 |
 | 7. CLI | v1.0 | 2/2 | Complete | 2026-03-23 |
 | 8. Wizard Extension | v1.1 | 1/1 | Complete | 2026-03-24 |
-| 9. Config Generation and Templates | v1.1 | 0/2 | Not started | - |
+| 9. Config Generation and Templates | 2/2 | Complete   | 2026-03-24 | - |
 | 10. Health Checks and CLI | v1.1 | 0/? | Not started | - |
 | 11. Test Suite | v1.1 | 0/? | Not started | - |
