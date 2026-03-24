@@ -7,8 +7,8 @@
 # Exports: phase_5_configuration
 #
 # Internal: _generate_secret, _load_or_generate_secrets, _write_credentials_file,
-#           _render_env_file, _render_nginx_conf, _render_compose_file,
-#           _build_compose_profiles, _get_docker_socket_volume
+#           _render_env_file, _render_nginx_conf, _render_dbgpt_config,
+#           _render_compose_file, _build_compose_profiles, _get_docker_socket_volume
 #
 # Depends on: lib/common.sh (_atomic_sed, die, log_info, ensure_directory, AGMIND_DIR)
 #             lib/wizard.sh (WIZARD_* exports)
@@ -211,6 +211,10 @@ _render_env_file() {
     _atomic_sed "s|{{PLUGIN_DAEMON_KEY}}|${PLUGIN_DAEMON_KEY}|g" "$output"
     _atomic_sed "s|{{DIFY_INNER_API_KEY}}|${DIFY_INNER_API_KEY}|g" "$output"
 
+    # Open Notebook secrets (always substitute -- secrets generated regardless of tool selection)
+    _atomic_sed "s|{{OPEN_NOTEBOOK_ENCRYPTION_KEY}}|${OPEN_NOTEBOOK_ENCRYPTION_KEY}|g" "$output"
+    _atomic_sed "s|{{SURREAL_PASSWORD}}|${SURREAL_PASSWORD}|g" "$output"
+
     # Substitute wizard choices (SEC-01: escape user-supplied values)
     _atomic_sed "s|{{WIZARD_LLM_MODEL}}|$(_sed_escape "${WIZARD_LLM_MODEL}")|g" "$output"
     _atomic_sed "s|{{WIZARD_EMBED_MODEL}}|$(_sed_escape "${WIZARD_EMBED_MODEL}")|g" "$output"
@@ -234,7 +238,8 @@ _render_env_file() {
 }
 
 # Render nginx.conf from template.
-# No substitutions needed for v1 (all values are static Docker service names).
+# Conditionally injects upstream/location blocks for optional tools.
+# Uses temp files + sed line-insert because BSD sed does not expand \n in replacements.
 _render_nginx_conf() {
     local template="${SCRIPT_DIR}/templates/nginx.conf.template"
     local output="${AGMIND_DIR}/nginx.conf"
@@ -245,6 +250,86 @@ _render_nginx_conf() {
 
     sudo cp "$template" "$output"
     sudo chown "$(whoami)" "$output"
+
+    # Helper: insert contents of a temp file AFTER the line matching a marker in $output.
+    # $1=marker string, $2=temp file with block to insert.
+    _nginx_insert_after_marker() {
+        local marker="$1"
+        local block_file="$2"
+        local line_num
+        line_num=$(grep -n "$marker" "$output" | head -1 | cut -d: -f1)
+        if [ -n "$line_num" ]; then
+            /usr/bin/sed -i '' "${line_num}r ${block_file}" "$output"
+        fi
+    }
+
+    # Conditionally inject Open Notebook upstream + location
+    if [ "${WIZARD_OPEN_NOTEBOOK:-0}" = "1" ]; then
+        local nb_up_tmp
+        nb_up_tmp=$(mktemp)
+        cat > "$nb_up_tmp" <<'NBUP'
+upstream open-notebook-app {
+    server open-notebook:8502;
+}
+NBUP
+        _nginx_insert_after_marker "# {{OPTIONAL_UPSTREAMS}}" "$nb_up_tmp"
+        rm -f "$nb_up_tmp"
+
+        local nb_loc_tmp
+        nb_loc_tmp=$(mktemp)
+        cat > "$nb_loc_tmp" <<'NBLOC'
+
+    # Open Notebook (Streamlit -- WebSocket required)
+    location /notebook/ {
+        proxy_pass http://open-notebook-app/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+NBLOC
+        _nginx_insert_after_marker "# {{OPTIONAL_LOCATIONS}}" "$nb_loc_tmp"
+        rm -f "$nb_loc_tmp"
+    fi
+
+    # Conditionally inject DB-GPT upstream + location
+    if [ "${WIZARD_DBGPT:-0}" = "1" ]; then
+        local gpt_up_tmp
+        gpt_up_tmp=$(mktemp)
+        cat > "$gpt_up_tmp" <<'GPTUP'
+upstream dbgpt-app {
+    server dbgpt:5670;
+}
+GPTUP
+        _nginx_insert_after_marker "# {{OPTIONAL_UPSTREAMS}}" "$gpt_up_tmp"
+        rm -f "$gpt_up_tmp"
+
+        local gpt_loc_tmp
+        gpt_loc_tmp=$(mktemp)
+        cat > "$gpt_loc_tmp" <<'GPTLOC'
+
+    # DB-GPT
+    location /dbgpt/ {
+        proxy_pass http://dbgpt-app/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+GPTLOC
+        _nginx_insert_after_marker "# {{OPTIONAL_LOCATIONS}}" "$gpt_loc_tmp"
+        rm -f "$gpt_loc_tmp"
+    fi
+
+    # Remove remaining markers (clean up)
+    _atomic_sed "/# \{\{OPTIONAL_UPSTREAMS\}\}/d" "$output"
+    _atomic_sed "/# \{\{OPTIONAL_LOCATIONS\}\}/d" "$output"
 
     log_info "Generated ${output}"
 }
@@ -271,6 +356,29 @@ _render_compose_file() {
 }
 
 # =============================================================================
+# DB-GPT TOML Config
+# =============================================================================
+
+# Render DB-GPT TOML config from template.
+# Only called when WIZARD_DBGPT=1. Substitutes model names.
+_render_dbgpt_config() {
+    local template="${SCRIPT_DIR}/templates/dbgpt-proxy-ollama.toml.template"
+    local output="${AGMIND_DIR}/dbgpt-proxy-ollama.toml"
+
+    if [[ ! -f "$template" ]]; then
+        die "Template not found: ${template}" "Check templates/ directory for dbgpt-proxy-ollama.toml.template"
+    fi
+
+    sudo cp "$template" "$output"
+    sudo chown "$(whoami)" "$output"
+
+    _atomic_sed "s|{{WIZARD_LLM_MODEL}}|$(_sed_escape "${WIZARD_LLM_MODEL}")|g" "$output"
+    _atomic_sed "s|{{WIZARD_EMBED_MODEL}}|$(_sed_escape "${WIZARD_EMBED_MODEL}")|g" "$output"
+
+    log_info "Generated DB-GPT config: ${output}"
+}
+
+# =============================================================================
 # Phase 5 Entry Point
 # =============================================================================
 
@@ -283,6 +391,11 @@ phase_5_configuration() {
     _render_env_file
     _render_nginx_conf
     _render_compose_file
+
+    # Generate DB-GPT TOML config if selected
+    if [ "${WIZARD_DBGPT:-0}" = "1" ]; then
+        _render_dbgpt_config
+    fi
 
     # Copy versions.env for Docker Compose env_file reference
     sudo cp "${SCRIPT_DIR}/templates/versions.env" "${AGMIND_DIR}/versions.env"
