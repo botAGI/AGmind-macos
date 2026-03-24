@@ -48,6 +48,7 @@ _load_or_generate_secrets() {
                 DB_PASSWORD|REDIS_PASSWORD|DIFY_SECRET_KEY|OPENWEBUI_SECRET|\
 SANDBOX_API_KEY|WEAVIATE_API_KEY|QDRANT_API_KEY|\
 PLUGIN_DAEMON_KEY|DIFY_INNER_API_KEY|\
+OPEN_NOTEBOOK_ENCRYPTION_KEY|SURREAL_PASSWORD|\
 WEBUI_ADMIN_EMAIL|WEBUI_ADMIN_PASSWORD)
                     # SEC-09: set as shell variable, not exported, to avoid leaking secrets to child processes
                     eval "$key=\$value"
@@ -72,6 +73,8 @@ WEBUI_ADMIN_EMAIL|WEBUI_ADMIN_PASSWORD)
         QDRANT_API_KEY=$(_generate_secret)
         PLUGIN_DAEMON_KEY=$(_generate_secret)
         DIFY_INNER_API_KEY=$(_generate_secret)
+        OPEN_NOTEBOOK_ENCRYPTION_KEY=$(_generate_secret)
+        SURREAL_PASSWORD=$(_generate_secret)
         # SEC-09: secrets are set as shell variables only, not exported,
         # to avoid leaking them to child processes via environment.
         # They are used within this shell session by _render_env_file and _write_credentials_file.
@@ -98,11 +101,17 @@ WEAVIATE_API_KEY=${WEAVIATE_API_KEY}
 QDRANT_API_KEY=${QDRANT_API_KEY}
 PLUGIN_DAEMON_KEY=${PLUGIN_DAEMON_KEY}
 DIFY_INNER_API_KEY=${DIFY_INNER_API_KEY}
+OPEN_NOTEBOOK_ENCRYPTION_KEY=${OPEN_NOTEBOOK_ENCRYPTION_KEY}
+SURREAL_PASSWORD=${SURREAL_PASSWORD}
 
 # Service URLs (for quick reference)
 # Dify Console: http://<host-ip>:80/apps/
 # Open WebUI:   http://<host-ip>:80/
 # Ollama API:   http://localhost:11434
+
+# Optional Tools (if installed):
+# Open Notebook: http://<host-ip>:80/notebook/
+# DB-GPT:        http://<host-ip>:80/dbgpt/
 EOF
 
     sudo chown "$(whoami)" "$creds_file"
@@ -132,6 +141,14 @@ _build_compose_profiles() {
     # Monitoring adds Portainer
     if [ "${WIZARD_MONITORING_MODE}" = "local" ]; then
         profiles="${profiles},monitoring"
+    fi
+
+    # Optional tools (v1.1)
+    if [ "${WIZARD_OPEN_NOTEBOOK}" = "1" ]; then
+        profiles="${profiles},opennotebook"
+    fi
+    if [ "${WIZARD_DBGPT}" = "1" ]; then
+        profiles="${profiles},dbgpt"
     fi
 
     echo "$profiles"
