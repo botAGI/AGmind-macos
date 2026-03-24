@@ -9,17 +9,17 @@ Requirements for v1.1 Optional AI Tools. Each maps to roadmap phases.
 
 ### Open Notebook
 
-- [ ] **ONBOOK-01**: Open Notebook deploys via Docker Compose profile `opennotebook` (SurrealDB + app containers)
+- [x] **ONBOOK-01**: Open Notebook deploys via Docker Compose profile `opennotebook` (SurrealDB + app containers)
 - [x] **ONBOOK-02**: Wizard asks "Install Open Notebook? [y/N]" with env var `INSTALL_OPEN_NOTEBOOK` for non-interactive mode
-- [ ] **ONBOOK-03**: nginx proxies Open Notebook at `/notebook/` path (upstream port 8502)
-- [ ] **ONBOOK-04**: Open Notebook connects to native Ollama via `host.docker.internal:11434`
+- [x] **ONBOOK-03**: nginx proxies Open Notebook at `/notebook/` path (upstream port 8502)
+- [x] **ONBOOK-04**: Open Notebook connects to native Ollama via `host.docker.internal:11434`
 
 ### DB-GPT
 
-- [ ] **DBGPT-01**: DB-GPT deploys via Docker Compose profile `dbgpt` (SQLite mode, Ollama proxy provider)
+- [x] **DBGPT-01**: DB-GPT deploys via Docker Compose profile `dbgpt` (SQLite mode, Ollama proxy provider)
 - [ ] **DBGPT-02**: config.sh generates TOML config for DB-GPT with `proxy/ollama` provider pointing to `host.docker.internal:11434`
 - [x] **DBGPT-03**: Wizard asks "Install DB-GPT? [y/N]" with env var `INSTALL_DBGPT` for non-interactive mode
-- [ ] **DBGPT-04**: nginx proxies DB-GPT at `/dbgpt/` path (upstream port 5670)
+- [x] **DBGPT-04**: nginx proxies DB-GPT at `/dbgpt/` path (upstream port 5670)
 - [ ] **DBGPT-05**: Health check for DB-GPT container integrated into phase_7_health (conditional on profile)
 - [ ] **DBGPT-06**: `agmind status` and `agmind doctor` show DB-GPT status when installed
 
@@ -54,14 +54,14 @@ Requirements for v1.1 Optional AI Tools. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ONBOOK-01 | Phase 9 | Pending |
+| ONBOOK-01 | Phase 9 | Complete |
 | ONBOOK-02 | Phase 8 | Complete |
-| ONBOOK-03 | Phase 9 | Pending |
-| ONBOOK-04 | Phase 9 | Pending |
-| DBGPT-01 | Phase 9 | Pending |
+| ONBOOK-03 | Phase 9 | Complete |
+| ONBOOK-04 | Phase 9 | Complete |
+| DBGPT-01 | Phase 9 | Complete |
 | DBGPT-02 | Phase 9 | Pending |
 | DBGPT-03 | Phase 8 | Complete |
-| DBGPT-04 | Phase 9 | Pending |
+| DBGPT-04 | Phase 9 | Complete |
 | DBGPT-05 | Phase 10 | Pending |
 | DBGPT-06 | Phase 10 | Pending |
 | TEST-04 | Phase 11 | Pending |
