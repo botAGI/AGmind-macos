@@ -26,8 +26,10 @@ setup() {
 
     # Clear any leftover WIZARD_* or input vars
     unset DEPLOY_PROFILE LLM_MODEL EMBED_MODEL VECTOR_DB ETL_MODE MONITORING_MODE BACKUP_MODE
+    unset INSTALL_OPEN_NOTEBOOK INSTALL_DBGPT
     unset WIZARD_DEPLOY_PROFILE WIZARD_LLM_MODEL WIZARD_EMBED_MODEL WIZARD_VECTOR_DB
     unset WIZARD_ETL_MODE WIZARD_MONITORING_MODE WIZARD_BACKUP_MODE
+    unset WIZARD_OPEN_NOTEBOOK WIZARD_DBGPT
 }
 
 # =============================================================================
@@ -337,4 +339,80 @@ setup() {
     # Run in subshell to verify export
     result=$(bash -c 'echo "${WIZARD_DEPLOY_PROFILE}:${WIZARD_LLM_MODEL}:${WIZARD_VECTOR_DB}"')
     [ "$result" = "lan:qwen2.5:14b:weaviate" ]
+}
+
+# =============================================================================
+# Group 8: Optional tools wizard extensions (v1.1) -- TEST-04
+# =============================================================================
+
+@test "non-interactive defaults optional tools to off (0)" {
+    run_wizard
+    [ "$WIZARD_OPEN_NOTEBOOK" = "0" ]
+    [ "$WIZARD_DBGPT" = "0" ]
+}
+
+@test "non-interactive respects INSTALL_OPEN_NOTEBOOK=1" {
+    export INSTALL_OPEN_NOTEBOOK=1
+    run_wizard
+    [ "$WIZARD_OPEN_NOTEBOOK" = "1" ]
+}
+
+@test "non-interactive respects INSTALL_DBGPT=1" {
+    export INSTALL_DBGPT=1
+    run_wizard
+    [ "$WIZARD_DBGPT" = "1" ]
+}
+
+@test "non-interactive enables both optional tools" {
+    export INSTALL_OPEN_NOTEBOOK=1
+    export INSTALL_DBGPT=1
+    run_wizard
+    [ "$WIZARD_OPEN_NOTEBOOK" = "1" ]
+    [ "$WIZARD_DBGPT" = "1" ]
+}
+
+@test "non-interactive dies on invalid INSTALL_OPEN_NOTEBOOK" {
+    export INSTALL_OPEN_NOTEBOOK=2
+    run run_wizard
+    assert_failure
+    assert_output --partial "Invalid INSTALL_OPEN_NOTEBOOK"
+}
+
+@test "non-interactive dies on invalid INSTALL_DBGPT" {
+    export INSTALL_DBGPT=bogus
+    run run_wizard
+    assert_failure
+    assert_output --partial "Invalid INSTALL_DBGPT"
+}
+
+@test "WIZARD_OPEN_NOTEBOOK and WIZARD_DBGPT are exported after wizard" {
+    export INSTALL_OPEN_NOTEBOOK=1
+    export INSTALL_DBGPT=1
+    run_wizard
+    result=$(bash -c 'echo "${WIZARD_OPEN_NOTEBOOK}:${WIZARD_DBGPT}"')
+    [ "$result" = "1:1" ]
+}
+
+@test "interactive run_wizard with optional tools shows optional tool questions" {
+    export NON_INTERACTIVE=0
+    local tmpdir="${BATS_TEST_TMPDIR}"
+    # Pipe 9 newlines (7 base questions + 2 optional tool questions, both default No)
+    run /bin/bash -c "
+        set +u
+        cd '${PROJECT_ROOT}'
+        export AGMIND_DIR='${tmpdir}/agmind_interactive2'
+        export AGMIND_LOG_DIR='${tmpdir}/agmind_interactive2/logs'
+        export LOG_FILE='${tmpdir}/agmind_interactive2/logs/install.log'
+        export STATE_FILE='${tmpdir}/agmind_interactive2/.install-state'
+        mkdir -p \"\${AGMIND_DIR}\" \"\${AGMIND_LOG_DIR}\"
+        touch \"\${LOG_FILE}\" \"\${STATE_FILE}\"
+        source lib/common.sh
+        DETECTED_RAM_GB=32
+        source lib/wizard.sh
+        NON_INTERACTIVE=0
+        printf '\n\n\n\n\n\n\n\n\n' | run_wizard
+    " 2>&1
+    assert_success
+    assert_output --partial "Open Notebook: no"
+    assert_output --partial "DB-GPT:       no"
 }
