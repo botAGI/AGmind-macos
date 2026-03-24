@@ -100,6 +100,15 @@ cmd_status() {
     printf "  %-20s %s\n" "Open WebUI:" "http://${ip_addr}/"
     printf "  %-20s %s\n" "Dify Console:" "http://${ip_addr}/apps/"
     printf "  %-20s %s\n" "Ollama API:" "http://localhost:11434"
+
+    # Optional tools
+    local status_profiles
+    status_profiles=$(grep '^COMPOSE_PROFILES=' "${AGMIND_DIR}/.env" 2>/dev/null | cut -d= -f2) || true
+    case "$status_profiles" in
+        *dbgpt*)
+            printf "  %-20s %s\n" "DB-GPT:" "http://${ip_addr}/dbgpt/"
+            ;;
+    esac
 }
 
 # =============================================================================
@@ -159,7 +168,20 @@ cmd_doctor() {
         _doctor_fail "Ollama API not responding"
     fi
 
-    # 5. Disk space
+    # 5. DB-GPT (conditional on profile)
+    local doctor_profiles
+    doctor_profiles=$(grep '^COMPOSE_PROFILES=' "${AGMIND_DIR}/.env" 2>/dev/null | cut -d= -f2) || true
+    case "$doctor_profiles" in
+        *dbgpt*)
+            if curl -sf --connect-timeout 5 --max-time 10 http://localhost:5670/api/health >/dev/null 2>&1; then
+                _doctor_pass "DB-GPT API"
+            else
+                _doctor_fail "DB-GPT API not responding (profile active but service unhealthy)"
+            fi
+            ;;
+    esac
+
+    # 6. Disk space
     detect_disk
     if [ "$DETECTED_DISK_FREE_GB" -lt 30 ]; then
         _doctor_warn "Disk: ${DETECTED_DISK_FREE_GB}GB free (recommend 30GB+)"
@@ -167,14 +189,14 @@ cmd_doctor() {
         _doctor_pass "Disk: ${DETECTED_DISK_FREE_GB}GB free"
     fi
 
-    # 6. Install directory
+    # 7. Install directory
     if [ -d "$AGMIND_DIR" ]; then
         _doctor_pass "Install directory: ${AGMIND_DIR}"
     else
         _doctor_fail "Install directory not found: ${AGMIND_DIR}"
     fi
 
-    # 7. LaunchAgents
+    # 8. LaunchAgents
     local backup_loaded=0
     local health_loaded=0
     launchctl list com.agmind.backup >/dev/null 2>&1 && backup_loaded=1
