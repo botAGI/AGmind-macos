@@ -27,7 +27,7 @@ Requirements for v1.1 Optional AI Tools. Each maps to roadmap phases.
 
 - [ ] **TEST-04**: BATS tests for wizard extensions (Open Notebook + DB-GPT questions, non-interactive env vars)
 - [ ] **TEST-05**: BATS tests for Compose profile generation with optional tools
-- [ ] **TEST-06**: Integration test updated for optional tools flow
+- [x] **TEST-06**: Integration test updated for optional tools flow
 
 ## v2 Requirements
 
@@ -66,7 +66,7 @@ Requirements for v1.1 Optional AI Tools. Each maps to roadmap phases.
 | DBGPT-06 | Phase 10 | Complete |
 | TEST-04 | Phase 11 | Pending |
 | TEST-05 | Phase 11 | Pending |
-| TEST-06 | Phase 11 | Pending |
+| TEST-06 | Phase 11 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 13 total

@@ -81,7 +81,7 @@ Plans:
   1. BATS tests verify wizard asks Open Notebook and DB-GPT questions and respects non-interactive env vars
   2. BATS tests verify Compose profile string includes optional tool profiles for all selection combinations (none, one, both)
   3. Integration test exercises the full optional tools flow: wizard selection through config generation through compose profile activation
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 11-01-PLAN.md — Unit tests for wizard extensions (TEST-04) and Compose profile generation (TEST-05)
 - [ ] 11-02-PLAN.md — Integration test with optional tools flow (TEST-06)
@@ -100,4 +100,4 @@ Plans:
 | 8. Wizard Extension | v1.1 | 1/1 | Complete | 2026-03-24 |
 | 9. Config Generation and Templates | 2/2 | Complete   | 2026-03-24 | - |
 | 10. Health Checks and CLI | v1.1 | Complete    | 2026-03-24 | 2026-03-24 |
-| 11. Test Suite | v1.1 | 0/2 | Not started | - |
+| 11. Test Suite | 1/2 | In Progress|  | - |
