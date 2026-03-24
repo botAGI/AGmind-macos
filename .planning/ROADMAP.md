@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 AGMind macOS Installer** — Phases 1-7 (shipped 2026-03-23)
-- 🚧 **v1.1 Optional AI Tools** — Phases 8-11 (in progress)
+- ✅ **v1.1 Optional AI Tools** — Phases 8-11 (shipped 2026-03-24)
 
 ## Phases
 
@@ -22,14 +22,14 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
-### 🚧 v1.1 Optional AI Tools (In Progress)
+### ✅ v1.1 Optional AI Tools (Shipped 2026-03-24)
 
 **Milestone Goal:** Add Open Notebook and DB-GPT as optional wizard-selectable tools to the AGMind stack
 
 - [x] **Phase 8: Wizard Extension** — Interactive and non-interactive selection of optional AI tools (completed 2026-03-24)
 - [x] **Phase 9: Config Generation and Templates** — Compose profiles, env templates, nginx routing, secrets, TOML config for optional tools (completed 2026-03-24)
 - [x] **Phase 10: Health Checks and CLI** — Conditional health monitoring and CLI awareness of optional tools (completed 2026-03-24)
-- [ ] **Phase 11: Test Suite** — BATS test coverage for wizard, config, and integration with optional tools
+- [x] **Phase 11: Test Suite** — BATS test coverage for wizard, config, and integration with optional tools (completed 2026-03-24)
 
 ## Phase Details
 
@@ -81,10 +81,10 @@ Plans:
   1. BATS tests verify wizard asks Open Notebook and DB-GPT questions and respects non-interactive env vars
   2. BATS tests verify Compose profile string includes optional tool profiles for all selection combinations (none, one, both)
   3. Integration test exercises the full optional tools flow: wizard selection through config generation through compose profile activation
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
-- [ ] 11-01-PLAN.md — Unit tests for wizard extensions (TEST-04) and Compose profile generation (TEST-05)
-- [ ] 11-02-PLAN.md — Integration test with optional tools flow (TEST-06)
+- [x] 11-01-PLAN.md — Unit tests for wizard extensions (TEST-04) and Compose profile generation (TEST-05)
+- [x] 11-02-PLAN.md — Integration test with optional tools flow (TEST-06)
 
 ## Progress
 
@@ -100,4 +100,4 @@ Plans:
 | 8. Wizard Extension | v1.1 | 1/1 | Complete | 2026-03-24 |
 | 9. Config Generation and Templates | 2/2 | Complete   | 2026-03-24 | - |
 | 10. Health Checks and CLI | v1.1 | Complete    | 2026-03-24 | 2026-03-24 |
-| 11. Test Suite | 1/2 | In Progress|  | - |
+| 11. Test Suite | v1.1 | 2/2 | Complete | 2026-03-24 |

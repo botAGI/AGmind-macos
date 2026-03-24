@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Optional AI Tools
 status: completed
-stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-03-24T17:16:18.374Z"
-last_activity: 2026-03-24 — Phase 11 Plan 2 executed (integration test optional tools verification)
+stopped_at: Completed 11-01-PLAN.md
+last_updated: "2026-03-24T17:16:49Z"
+last_activity: 2026-03-24 — Phase 11 Plan 1 executed (wizard + config optional tools tests)
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 6
-  completed_plans: 5
-  percent: 83
+  completed_plans: 6
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-24)
 
 **Core value:** One `bash install.sh` command deploys a full local AI RAG stack on macOS with native Metal-accelerated Ollama inference
-**Current focus:** v1.1 Phase 11 Plan 2 complete (integration test optional tools)
+**Current focus:** v1.1 complete -- all 6 plans across 4 phases executed
 
 ## Current Position
 
-Phase: 11 of 11 (Test Suite) -- IN PROGRESS
-Plan: 2 of 2
-Status: Phase 11 Plan 2 complete
-Last activity: 2026-03-24 — Phase 11 Plan 2 executed (integration test optional tools verification)
+Phase: 11 of 11 (Test Suite) -- COMPLETE
+Plan: 2 of 2 (complete)
+Status: v1.1 milestone complete -- all phases and plans executed
+Last activity: 2026-03-24 — Phase 11 Plan 1 executed (wizard + config optional tools tests)
 
-Progress: [████████░░] 83%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -52,7 +52,11 @@ Progress: [████████░░] 83%
 - Trend: Stable (~3 min/plan)
 
 *Updated after each plan completion*
-| Phase 11 P02 | 1min | 1 tasks | 1 files |
+| 11-test-suite | 2/2 | 3min | 2min |
+
+**Recent Trend (v1.1):**
+- Last 6 plans: 1min, 2min, 2min, 2min, 1min, 2min
+- Trend: Very stable (~1.7 min/plan)
 
 ## Accumulated Context
 
@@ -76,6 +80,8 @@ Recent decisions affecting current work:
 - [Phase 10-01]: Reused case-statement pattern from weaviate for dbgpt profile detection
 - [Phase 10-01]: Renumbered doctor check sections to accommodate DB-GPT check
 - [Phase 11]: Increased mock RAM from 24GB to 32GB for optional tools integration test
+- [Phase 11-01]: Added WIZARD_OPEN_NOTEBOOK/WIZARD_DBGPT defaults to test_config.bats setup() for unbound variable fix
+- [Phase 11-01]: Added unset for optional tool env vars in test_wizard.bats setup() for test isolation
 
 ### Pending Todos
 
@@ -89,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T17:16:18.373Z
-Stopped at: Completed 11-02-PLAN.md
+Last session: 2026-03-24T17:16:49Z
+Stopped at: Completed 11-01-PLAN.md (v1.1 milestone complete)
 Resume file: None
