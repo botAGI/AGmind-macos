@@ -221,7 +221,7 @@ shellcheck lib/*.sh scripts/*.sh install.sh
 
 ## License
 
-MIT
+Apache 2.0
 
 ---
 
