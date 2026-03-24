@@ -32,6 +32,8 @@ setup() {
     export WIZARD_ETL_MODE="standard"
     export WIZARD_MONITORING_MODE="none"
     export WIZARD_BACKUP_MODE="local"
+    export WIZARD_OPEN_NOTEBOOK="0"
+    export WIZARD_DBGPT="0"
 
     # Default DOCKER_RUNTIME
     export DOCKER_RUNTIME="desktop"
@@ -348,4 +350,60 @@ CREDS
     local count
     count=$(grep -c '{{' "${AGMIND_DIR}/.env" || true)
     [ "$count" -eq 0 ]
+}
+
+# =============================================================================
+# CONFIG-08: Compose profiles with optional tools (v1.1) -- TEST-05
+# =============================================================================
+
+@test "CONFIG-08: build_compose_profiles omits opennotebook when not selected" {
+    export WIZARD_OPEN_NOTEBOOK="0"
+    export WIZARD_DBGPT="0"
+    run _build_compose_profiles
+    assert_success
+    refute_output --partial "opennotebook"
+}
+
+@test "CONFIG-08: build_compose_profiles includes opennotebook when selected" {
+    export WIZARD_OPEN_NOTEBOOK="1"
+    export WIZARD_DBGPT="0"
+    run _build_compose_profiles
+    assert_success
+    assert_output --partial "opennotebook"
+    refute_output --partial "dbgpt"
+}
+
+@test "CONFIG-08: build_compose_profiles includes dbgpt when selected" {
+    export WIZARD_OPEN_NOTEBOOK="0"
+    export WIZARD_DBGPT="1"
+    run _build_compose_profiles
+    assert_success
+    assert_output --partial "dbgpt"
+    refute_output --partial "opennotebook"
+}
+
+@test "CONFIG-08: build_compose_profiles includes both optional tools" {
+    export WIZARD_OPEN_NOTEBOOK="1"
+    export WIZARD_DBGPT="1"
+    run _build_compose_profiles
+    assert_success
+    assert_output --partial "opennotebook"
+    assert_output --partial "dbgpt"
+}
+
+@test "CONFIG-08: COMPOSE_PROFILES in .env includes opennotebook when selected" {
+    export WIZARD_OPEN_NOTEBOOK="1"
+    export WIZARD_DBGPT="0"
+    _load_or_generate_secrets
+    _render_env_file
+    grep -q "opennotebook" "${AGMIND_DIR}/.env"
+}
+
+@test "CONFIG-08: COMPOSE_PROFILES in .env includes both optional tools" {
+    export WIZARD_OPEN_NOTEBOOK="1"
+    export WIZARD_DBGPT="1"
+    _load_or_generate_secrets
+    _render_env_file
+    grep -q "opennotebook" "${AGMIND_DIR}/.env"
+    grep -q "dbgpt" "${AGMIND_DIR}/.env"
 }
