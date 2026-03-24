@@ -8,7 +8,7 @@ TESTDIR=$(mktemp -d)
 trap 'rm -rf "$TESTDIR"' EXIT
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo " Integration Test — Full 9-Phase Install"
+echo " Integration Test — Full 9-Phase Install + Optional Tools"
 echo " Sandbox: ${TESTDIR}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
@@ -152,7 +152,7 @@ chmod +x "${MOCK_BIN}/sw_vers"
 # sysctl mock (24GB RAM)
 cat > "${MOCK_BIN}/sysctl" << 'MOCK'
 #!/bin/bash
-echo "25769803776"
+echo "34359738368"
 MOCK
 chmod +x "${MOCK_BIN}/sysctl"
 
@@ -262,6 +262,8 @@ NON_INTERACTIVE=1 \
 DEPLOY_PROFILE=lan \
 VERBOSE=1 \
 DOCKER_RUNTIME=desktop \
+INSTALL_OPEN_NOTEBOOK=1 \
+INSTALL_DBGPT=1 \
 /bin/bash "${SCRIPT_DIR}/install.sh" 2>&1
 
 EXIT_CODE=$?
@@ -281,5 +283,44 @@ find "$AGMIND" -type f | sort | while read -r f; do
     size=$(wc -c < "$f" | tr -d ' ')
     echo "  $(echo "$f" | sed "s|$AGMIND|/opt/agmind|") (${size} bytes)"
 done
+
+echo ""
+echo "Verifying optional tools configuration..."
+VERIFY_PASS=0
+VERIFY_FAIL=0
+
+# Check COMPOSE_PROFILES contains optional tool profiles
+if grep -q "opennotebook" "${AGMIND}/.env" && grep -q "dbgpt" "${AGMIND}/.env"; then
+    echo "  [PASS] COMPOSE_PROFILES includes opennotebook and dbgpt"
+    VERIFY_PASS=$((VERIFY_PASS + 1))
+else
+    echo "  [FAIL] COMPOSE_PROFILES missing optional tool profiles"
+    VERIFY_FAIL=$((VERIFY_FAIL + 1))
+fi
+
+# Check nginx.conf has optional tool location blocks
+if grep -q "/notebook/" "${AGMIND}/nginx.conf" && grep -q "/dbgpt/" "${AGMIND}/nginx.conf"; then
+    echo "  [PASS] nginx.conf has /notebook/ and /dbgpt/ location blocks"
+    VERIFY_PASS=$((VERIFY_PASS + 1))
+else
+    echo "  [FAIL] nginx.conf missing optional tool location blocks"
+    VERIFY_FAIL=$((VERIFY_FAIL + 1))
+fi
+
+# Check DB-GPT TOML config was generated
+if [ -f "${AGMIND}/dbgpt-proxy-ollama.toml" ]; then
+    echo "  [PASS] dbgpt-proxy-ollama.toml generated"
+    VERIFY_PASS=$((VERIFY_PASS + 1))
+else
+    echo "  [FAIL] dbgpt-proxy-ollama.toml not generated"
+    VERIFY_FAIL=$((VERIFY_FAIL + 1))
+fi
+
+echo ""
+echo "Optional tools verification: ${VERIFY_PASS} passed, ${VERIFY_FAIL} failed"
+
+if [ "$VERIFY_FAIL" -gt 0 ]; then
+    EXIT_CODE=1
+fi
 
 exit $EXIT_CODE
