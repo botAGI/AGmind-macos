@@ -135,7 +135,44 @@ _wizard_ask() {
 }
 
 # =============================================================================
-# Interactive Ask Functions (7 questions)
+# _wizard_ask_yesno -- Yes/No prompt with default
+# =============================================================================
+# Usage: _wizard_ask_yesno <prompt_text> <default: y|n>
+# Returns "1" for yes, "0" for no via echo.
+
+_wizard_ask_yesno() {
+    local prompt="$1"
+    local default="$2"
+    local choice=""
+
+    while true; do
+        printf "\n%s " "$prompt" >&2
+        read -r choice
+        if [ -z "$choice" ]; then
+            choice="$default"
+        fi
+        # Bash 3.2 compatible lowercase via case statement
+        case "$choice" in
+            y|Y|yes|Yes|YES) echo "1"; return 0 ;;
+            n|N|no|No|NO)    echo "0"; return 0 ;;
+            *) printf "Please answer y or n.\n" >&2 ;;
+        esac
+    done
+}
+
+# =============================================================================
+# _wizard_warn_ram_optional -- Warn about RAM pressure for optional tools
+# =============================================================================
+
+_wizard_warn_ram_optional() {
+    local ram="${DETECTED_RAM_GB:-32}"
+    if [ "$ram" -lt 16 ]; then
+        log_warn "Your system has ${ram}GB RAM. Optional AI tools require additional memory. Installing both may cause memory pressure."
+    fi
+}
+
+# =============================================================================
+# Interactive Ask Functions (7 questions + 2 optional tool questions)
 # =============================================================================
 
 # Question 1: Deploy profile
@@ -265,6 +302,16 @@ _wizard_ask_backup() {
     echo "$result"
 }
 
+# Question 8: Open Notebook (optional AI tool)
+_wizard_ask_open_notebook() {
+    _wizard_ask_yesno "Install Open Notebook (local AI notebook)? [y/N]" "n"
+}
+
+# Question 9: DB-GPT (optional AI tool)
+_wizard_ask_dbgpt() {
+    _wizard_ask_yesno "Install DB-GPT (database AI assistant)? [y/N]" "n"
+}
+
 # =============================================================================
 # _wizard_non_interactive -- Read all choices from env vars with defaults
 # =============================================================================
@@ -338,8 +385,16 @@ run_wizard() {
         WIZARD_BACKUP_MODE=$(_wizard_ask_backup)
         log_info "Backup mode: ${WIZARD_BACKUP_MODE}"
 
+        # Optional AI tools
+        _wizard_warn_ram_optional
+        WIZARD_OPEN_NOTEBOOK=$(_wizard_ask_open_notebook)
+        log_info "Open Notebook: $([ "$WIZARD_OPEN_NOTEBOOK" = "1" ] && echo "yes" || echo "no")"
+        WIZARD_DBGPT=$(_wizard_ask_dbgpt)
+        log_info "DB-GPT: $([ "$WIZARD_DBGPT" = "1" ] && echo "yes" || echo "no")"
+
         export WIZARD_DEPLOY_PROFILE WIZARD_LLM_MODEL WIZARD_EMBED_MODEL
         export WIZARD_VECTOR_DB WIZARD_ETL_MODE WIZARD_MONITORING_MODE WIZARD_BACKUP_MODE
+        export WIZARD_OPEN_NOTEBOOK WIZARD_DBGPT
     fi
 
     # Log summary
@@ -351,4 +406,6 @@ run_wizard() {
     log_info "  ETL:        ${WIZARD_ETL_MODE}"
     log_info "  Monitoring: ${WIZARD_MONITORING_MODE}"
     log_info "  Backup:     ${WIZARD_BACKUP_MODE}"
+    log_info "  Open Notebook: $([ "${WIZARD_OPEN_NOTEBOOK}" = "1" ] && echo "yes" || echo "no")"
+    log_info "  DB-GPT:       $([ "${WIZARD_DBGPT}" = "1" ] && echo "yes" || echo "no")"
 }
