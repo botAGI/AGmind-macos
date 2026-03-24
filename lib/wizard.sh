@@ -347,8 +347,18 @@ _wizard_non_interactive() {
     _validate_choice "BACKUP_MODE" "$WIZARD_BACKUP_MODE" "local" "remote"
     log_info "Backup mode: ${WIZARD_BACKUP_MODE}"
 
+    # Optional AI tools
+    WIZARD_OPEN_NOTEBOOK="${INSTALL_OPEN_NOTEBOOK:-0}"
+    _validate_choice "INSTALL_OPEN_NOTEBOOK" "$WIZARD_OPEN_NOTEBOOK" "0" "1"
+    log_info "Open Notebook: $([ "$WIZARD_OPEN_NOTEBOOK" = "1" ] && echo "yes" || echo "no")"
+
+    WIZARD_DBGPT="${INSTALL_DBGPT:-0}"
+    _validate_choice "INSTALL_DBGPT" "$WIZARD_DBGPT" "0" "1"
+    log_info "DB-GPT: $([ "$WIZARD_DBGPT" = "1" ] && echo "yes" || echo "no")"
+
     export WIZARD_DEPLOY_PROFILE WIZARD_LLM_MODEL WIZARD_EMBED_MODEL
     export WIZARD_VECTOR_DB WIZARD_ETL_MODE WIZARD_MONITORING_MODE WIZARD_BACKUP_MODE
+    export WIZARD_OPEN_NOTEBOOK WIZARD_DBGPT
 }
 
 # =============================================================================
