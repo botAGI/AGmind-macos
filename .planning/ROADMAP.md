@@ -28,7 +28,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 8: Wizard Extension** — Interactive and non-interactive selection of optional AI tools (completed 2026-03-24)
 - [x] **Phase 9: Config Generation and Templates** — Compose profiles, env templates, nginx routing, secrets, TOML config for optional tools (completed 2026-03-24)
-- [ ] **Phase 10: Health Checks and CLI** — Conditional health monitoring and CLI awareness of optional tools
+- [x] **Phase 10: Health Checks and CLI** — Conditional health monitoring and CLI awareness of optional tools (completed 2026-03-24)
 - [ ] **Phase 11: Test Suite** — BATS test coverage for wizard, config, and integration with optional tools
 
 ## Phase Details
@@ -69,7 +69,9 @@ Plans:
   1. `phase_7_health` conditionally checks DB-GPT container health when dbgpt profile is active
   2. `agmind status` shows DB-GPT status and URL when installed, or omits it when not installed
   3. `agmind doctor` reports DB-GPT health when the dbgpt profile is active
-**Plans**: TBD
+**Plans:** 1/1 plans complete
+Plans:
+- [x] 10-01-PLAN.md — Add conditional DB-GPT health check to health.sh and DB-GPT status/doctor to agmind.sh
 
 ### Phase 11: Test Suite
 **Goal**: All v1.1 changes are verified by automated BATS tests
@@ -94,5 +96,5 @@ Plans:
 | 7. CLI | v1.0 | 2/2 | Complete | 2026-03-23 |
 | 8. Wizard Extension | v1.1 | 1/1 | Complete | 2026-03-24 |
 | 9. Config Generation and Templates | 2/2 | Complete   | 2026-03-24 | - |
-| 10. Health Checks and CLI | v1.1 | 0/? | Not started | - |
+| 10. Health Checks and CLI | v1.1 | 1/1 | Complete | 2026-03-24 |
 | 11. Test Suite | v1.1 | 0/? | Not started | - |

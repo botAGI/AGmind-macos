@@ -20,8 +20,8 @@ Requirements for v1.1 Optional AI Tools. Each maps to roadmap phases.
 - [x] **DBGPT-02**: config.sh generates TOML config for DB-GPT with `proxy/ollama` provider pointing to `host.docker.internal:11434`
 - [x] **DBGPT-03**: Wizard asks "Install DB-GPT? [y/N]" with env var `INSTALL_DBGPT` for non-interactive mode
 - [x] **DBGPT-04**: nginx proxies DB-GPT at `/dbgpt/` path (upstream port 5670)
-- [ ] **DBGPT-05**: Health check for DB-GPT container integrated into phase_7_health (conditional on profile)
-- [ ] **DBGPT-06**: `agmind status` and `agmind doctor` show DB-GPT status when installed
+- [x] **DBGPT-05**: Health check for DB-GPT container integrated into phase_7_health (conditional on profile)
+- [x] **DBGPT-06**: `agmind status` and `agmind doctor` show DB-GPT status when installed
 
 ### Testing
 
@@ -62,8 +62,8 @@ Requirements for v1.1 Optional AI Tools. Each maps to roadmap phases.
 | DBGPT-02 | Phase 9 | Complete |
 | DBGPT-03 | Phase 8 | Complete |
 | DBGPT-04 | Phase 9 | Complete |
-| DBGPT-05 | Phase 10 | Pending |
-| DBGPT-06 | Phase 10 | Pending |
+| DBGPT-05 | Phase 10 | Complete |
+| DBGPT-06 | Phase 10 | Complete |
 | TEST-04 | Phase 11 | Pending |
 | TEST-05 | Phase 11 | Pending |
 | TEST-06 | Phase 11 | Pending |
