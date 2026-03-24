@@ -266,6 +266,67 @@ services:
       - "{{DOCKER_SOCKET_PATH}}:/var/run/docker.sock:ro"
       - portainer_data:/data
 
+  # ===========================================================================
+  # SurrealDB (Open Notebook database -- profile-gated)
+  # ===========================================================================
+  surrealdb:
+    image: surrealdb/surrealdb:${SURREALDB_VERSION}
+    restart: always
+    profiles:
+      - opennotebook
+    command: start --log info --user root --pass ${SURREAL_PASSWORD} rocksdb:/mydata/mydatabase.db
+    user: root
+    volumes:
+      - surrealdb_data:/mydata
+    environment:
+      SURREAL_EXPERIMENTAL_GRAPHQL: "true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ===========================================================================
+  # Open Notebook (AI research notebook -- profile-gated)
+  # ===========================================================================
+  open-notebook:
+    image: lfnovo/open_notebook:${OPEN_NOTEBOOK_VERSION}
+    restart: always
+    profiles:
+      - opennotebook
+    environment:
+      OPEN_NOTEBOOK_ENCRYPTION_KEY: ${OPEN_NOTEBOOK_ENCRYPTION_KEY}
+      SURREAL_URL: ws://surrealdb:8000/rpc
+      SURREAL_USER: root
+      SURREAL_PASSWORD: ${SURREAL_PASSWORD}
+      SURREAL_NAMESPACE: open_notebook
+      SURREAL_DATABASE: open_notebook
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - opennotebook_data:/app/data
+    depends_on:
+      surrealdb:
+        condition: service_healthy
+
+  # ===========================================================================
+  # DB-GPT (AI database assistant -- profile-gated)
+  # ===========================================================================
+  dbgpt:
+    image: eosphorosai/dbgpt-openai:${DBGPT_VERSION}
+    restart: always
+    profiles:
+      - dbgpt
+    command: "dbgpt start webserver --config /app/configs/dbgpt-proxy-ollama.toml"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - dbgpt_data:/app/pilot/data
+      - dbgpt_message:/app/pilot/message
+      - ./dbgpt-proxy-ollama.toml:/app/configs/dbgpt-proxy-ollama.toml:ro
+
 # =============================================================================
 # Volumes
 # =============================================================================
@@ -278,3 +339,7 @@ volumes:
   qdrant_data:
   openwebui_data:
   portainer_data:
+  surrealdb_data:
+  opennotebook_data:
+  dbgpt_data:
+  dbgpt_message:

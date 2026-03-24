@@ -1,0 +1,19 @@
+[service.web]
+host = "0.0.0.0"
+port = 5670
+
+[service.web.database]
+type = "sqlite"
+path = "pilot/meta_data/dbgpt.db"
+
+[[models.llms]]
+name = "{{WIZARD_LLM_MODEL}}"
+provider = "proxy/ollama"
+api_base = "http://host.docker.internal:11434"
+api_key = ""
+
+[[models.embeddings]]
+name = "{{WIZARD_EMBED_MODEL}}"
+provider = "proxy/ollama"
+api_url = "http://host.docker.internal:11434"
+api_key = ""
